@@ -1,1 +1,3 @@
+*.DS_Store
+sacraria_ios.xcodeproj/xcuserdata/*.xcuserdatad/xcdebugger/
 sacraria_ios.xcodeproj/project.xcworkspace/xcuserdata/

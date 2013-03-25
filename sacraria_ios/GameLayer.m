@@ -8,24 +8,60 @@
 
 
 // Import the interfaces
-#import "HelloWorldLayer.h"
+#import "GameLayer.h"
+#import "GameConfig.h"
 
+#import "ConnectionLayer.h"
 // Needed to obtain the Navigation Controller
 #import "AppDelegate.h"
+
+#import "Settings.h"
+
+#import "APIClient.h"
+#import <CommonCrypto/CommonDigest.h>
+
+#define kSalt @"adlfu3489tyh2jnkLIUGI&%EV(&0982cbgrykxjnk8855"
 
 #pragma mark - HelloWorldLayer
 
 // HelloWorldLayer implementation
-@implementation HelloWorldLayer
+@interface GameLayer (APINotifications)
 
-// Helper class method that creates a Scene with the HelloWorldLayer as the only child.
-+(CCScene *) scene
-{
+//- (void) onLoggedIn;
+//- (void) onFailedToLogIn;
+//
+//- (void) onSignedUp;
+//- (void) onFailedToSignUp;
+
+- (void) onPingLost;
+//- (void) onFailedToConnect;
+
+//- (void) onNetworkConnectionRestored;
+
+@end
+
+
+@implementation GameLayer
+
+//-(NSString*)UUIDString {
+//    CFUUIDRef theUUID = CFUUIDCreate(NULL);
+//    CFStringRef string = CFUUIDCreateString(NULL, theUUID);
+//    CFRelease(theUUID);
+//    return (NSString *)string;
+//}
+
+- (void) test {    
+
+        
+        //[ar addObject: hashedStr];
+}
+
++(CCScene *) scene {
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
 	
 	// 'layer' is an autorelease object.
-	HelloWorldLayer *layer = [HelloWorldLayer node];
+	GameLayer *layer = [GameLayer node];
 	
 	// add layer as a child to scene
 	[scene addChild: layer];
@@ -34,15 +70,19 @@
 	return scene;
 }
 
-// on "init" you need to initialize your instance
--(id) init
-{
+- (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+    
+	[super dealloc];
+}
+
+-(id) init {
 	// always call "super" init
 	// Apple recommends to re-assign "self" with the "super's" return value
-	if( (self=[super init]) ) {
+	if((self = [super init])) {
 		
 		// create and initialize a Label
-		CCLabelTTF *label = [CCLabelTTF labelWithString:@"Hello World" fontName:@"Marker Felt" fontSize:64];
+		CCLabelTTF *label = [CCLabelTTF labelWithString:@"The game" fontName:@"Marker Felt" fontSize:64];
 
 		// ask director for the window size
 		CGSize size = [[CCDirector sharedDirector] winSize];
@@ -53,79 +93,37 @@
 		// add the label as a child to this Layer
 		[self addChild: label];
 		
-		
-		
-		//
-		// Leaderboards and Achievements
-		//
-		
-		// Default font size will be 28 points.
-		[CCMenuItemFont setFontSize:28];
-		
-		// Achievement Menu Item using blocks
-		CCMenuItem *itemAchievement = [CCMenuItemFont itemWithString:@"Achievements" block:^(id sender) {
-			
-			
-			GKAchievementViewController *achivementViewController = [[GKAchievementViewController alloc] init];
-			achivementViewController.achievementDelegate = self;
-			
-			AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-			
-			[[app navController] presentModalViewController:achivementViewController animated:YES];
-			
-			[achivementViewController release];
-		}
-									   ];
-
-		// Leaderboard Menu Item using blocks
-		CCMenuItem *itemLeaderboard = [CCMenuItemFont itemWithString:@"Leaderboard" block:^(id sender) {
-			
-			
-			GKLeaderboardViewController *leaderboardViewController = [[GKLeaderboardViewController alloc] init];
-			leaderboardViewController.leaderboardDelegate = self;
-			
-			AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-			
-			[[app navController] presentModalViewController:leaderboardViewController animated:YES];
-			
-			[leaderboardViewController release];
-		}
-									   ];
-		
-		CCMenu *menu = [CCMenu menuWithItems:itemAchievement, itemLeaderboard, nil];
+		CCMenuItem *itemLeaderboard = [CCMenuItemFont itemWithString: @"test" target: self selector: @selector(test)];
+		CCMenu *menu = [CCMenu menuWithItems: itemLeaderboard, nil];
 		
 		[menu alignItemsHorizontallyWithPadding:20];
 		[menu setPosition:ccp( size.width/2, size.height/2 - 50)];
 		
 		// Add the menu to the layer
 		[self addChild:menu];
+        
+        //subscribe for connection notifications
+        [[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector(onPingLost)
+                                                     name: kPingLostNotification
+                                                   object: nil];
+        
+        //
+        
+        [self test];
 
 	}
 	return self;
 }
 
-// on "dealloc" you need to release all your retained objects
-- (void) dealloc
-{
-	// in case you have something to dealloc, do it in this method
-	// in this particular example nothing needs to be released.
-	// cocos2d will automatically release all the children (Label)
-	
-	// don't forget to call "super dealloc"
-	[super dealloc];
+@end
+
+@implementation GameLayer (APINotifications)
+
+- (void) onPingLost {
+    //the ping is lost, so let's reconnect
+    //free all the resources maybe
+    [[CCDirector sharedDirector] pushScene: [ConnectionLayer scene]];
 }
 
-#pragma mark GameKit delegate
-
--(void) achievementViewControllerDidFinish:(GKAchievementViewController *)viewController
-{
-	AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-	[[app navController] dismissModalViewControllerAnimated:YES];
-}
-
--(void) leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController
-{
-	AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-	[[app navController] dismissModalViewControllerAnimated:YES];
-}
 @end

@@ -9,14 +9,51 @@
 #import "cocos2d.h"
 
 #import "AppDelegate.h"
-#import "IntroLayer.h"
+#import "ConnectionLayer.h"
+
+#import "Settings.h"
+#import "APIClient.h"
+#import "GameConfig.h"
 
 @implementation AppController
 
 @synthesize window=window_, navController=navController_, director=director_;
 
+//- (void) test
+//{
+//    [[APIClient sharedClient] reconnect];
+//}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //test random numbers
+    
+    
+//    NSMutableDictionary *d = [NSMutableDictionary dictionary];
+//    
+//    for(int i = 0; i < 15; ++i) {
+//        [d setObject: [NSNumber numberWithInt: 0] forKey: [NSString stringWithFormat: @"%i", i]];
+//    }
+//    
+//    for(int i = 0; i < 1000000; ++i) {
+//        int num = random() % 15;
+//        
+//        int val = [[d objectForKey: [NSString stringWithFormat: @"%i", num]] intValue];
+//        
+//        [d setObject: [NSNumber numberWithInt: val + 1] forKey: [NSString stringWithFormat: @"%i", num]];
+//    }
+//    
+//    for(NSString *k in d) {
+//        NSNumber *num = [d objectForKey: k];
+//        
+//        CCLOG(@"%i for %@", [num intValue], k);
+//    }
+    //[self performsele];
+    
+    //load settings
+    //show this in a separate layer?
+    //[self performSelector: @selector(test) withObject: nil afterDelay: 5];
+    
 	// Create the main window
 	window_ = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
@@ -93,7 +130,7 @@
 	if(director.runningScene == nil) {
 		// Add the first scene to the stack. The director will draw it immediately into the framebuffer. (Animation is started automatically when the view is displayed.)
 		// and add the scene to the stack. The director will run it when it automatically when the view is displayed.
-		[director runWithScene: [IntroLayer scene]];
+		[director runWithScene: [ConnectionLayer scene]];
 	}
 }
 
@@ -133,6 +170,13 @@
 // application will be killed
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    [[Settings sharedSettings] save];
+    [[Settings sharedSettings] release];
+    
+    [[GameConfig sharedConfig] release];
+    
+    [[APIClient sharedClient] release];
+    
 	CC_DIRECTOR_END();
 }
 
