@@ -46,6 +46,8 @@
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver: self];
     
+    CCLOG(@"dealloc of connection layer.");
+    
     [super dealloc];
 }
 
@@ -116,9 +118,9 @@
     
     [self runAction:
                     [CCSequence actions:
-                                        [CCDelayTime actionWithDuration: 1.5],
+                                        [CCDelayTime actionWithDuration: 0.5],
                                         [CCCallBlock actionWithBlock:^{
-                                            [[CCDirector sharedDirector] pushScene: [GameLayer scene]];
+                                            [[CCDirector sharedDirector] replaceScene: [GameLayer scene]];
                                         }],
                                         nil]];
 }
@@ -135,7 +137,7 @@
     //we've just signed up, so let's login
     [self runAction:
                     [CCSequence actions:
-                                        [CCDelayTime actionWithDuration: 1.0],
+                                        [CCDelayTime actionWithDuration: 0.5],
                                         [CCCallBlock actionWithBlock:^{
                                             [[APIClient sharedClient] login];
                                         }],

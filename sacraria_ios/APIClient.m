@@ -112,7 +112,9 @@ static NSInteger NumOfUnrespondedPings = 0;
 - (void) login {
     NSLog(@"Trying to login.");
     
-    //NSLog(@"current thread: %@", [NSThread currentThread]);
+    if(_pingTimer) {
+        [self stopPinging];
+    }
     
     Settings *settings = [Settings sharedSettings];
     if(!settings.userID) {
@@ -146,6 +148,7 @@ static NSInteger NumOfUnrespondedPings = 0;
                         
                         //we're in normal mode now, so forget about previous failed attempts to connect
                         NumOfReconnections = 0;
+                        NumOfUnrespondedPings = 0;
                         
                         //validate the response first
                         [self startPinging];
@@ -167,20 +170,22 @@ static NSInteger NumOfUnrespondedPings = 0;
                         //[self reconnect];
                         
                         //should we reconnect when reachability status changes?
-                        [self setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-                            if(status != AFNetworkReachabilityStatusNotReachable) {
-                                //[self reconnect];
-                                //just broadcast that we're fine now
-                                [[NSNotificationCenter defaultCenter] postNotificationName: kNetworkConnectionRestored
-                                                                                    object: nil];
-                            }
-                            
-                        }];
+//                        [self setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+//                            NSLog(@"reachability status changed: %i", status);
+//                            
+//                            if(status != AFNetworkReachabilityStatusNotReachable) {
+//                                //[self reconnect];
+//                                //just broadcast that we're fine now
+//                                [[NSNotificationCenter defaultCenter] postNotificationName: kNetworkConnectionRestored
+//                                                                                    object: nil];
+//                            }
+//                            
+//                        }];
                         
                         //it's better to try reconnecting permanently
-                        //[[NSNotificationCenter defaultCenter] postNotificationName: kFailedToLogInNotification
-                        //                                                    object: nil
-                        //                                                  userInfo: nil];
+                        [[NSNotificationCenter defaultCenter] postNotificationName: kFailedToLogInNotification
+                                                                            object: nil
+                                                                          userInfo: nil];
                     }
         ];
     }
@@ -221,8 +226,12 @@ static NSInteger NumOfUnrespondedPings = 0;
 @implementation APIClient (Ping)
 
 - (void) stopPinging {
-    [_pingTimer invalidate];
-    _pingTimer = nil;
+    if(_pingTimer) {
+        [_pingTimer invalidate];
+        _pingTimer = nil;
+        
+        [self cancelAllHTTPOperationsWithMethod: @"GET" path: @"ping/"];
+    }
 }
 
 - (void) ping: (NSTimer *) timer {
@@ -245,6 +254,7 @@ static NSInteger NumOfUnrespondedPings = 0;
                 ^(AFHTTPRequestOperation *operation, NSError *error) {
                     NSLog(@"Didn't receive ping response. Error: %@", error.localizedDescription);
                     
+                    //which self is used here?
                     [self checkPingResponse: nil];
                 }
     ];
@@ -271,6 +281,8 @@ static NSInteger NumOfUnrespondedPings = 0;
         
         if(NumOfUnrespondedPings == kMaxNumOfUnrespondedPings) {
             //don't reconnect automatically
+            //should we stop pinging?
+            [self stopPinging];
             //[self reconnect];
             [[NSNotificationCenter defaultCenter] postNotificationName: kPingLostNotification
                                                                 object: nil];
