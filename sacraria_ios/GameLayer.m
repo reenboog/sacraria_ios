@@ -17,40 +17,15 @@
 
 #import "Settings.h"
 
-#import "APIClient.h"
 #import <CommonCrypto/CommonDigest.h>
 
 #define kSalt @"adlfu3489tyh2jnkLIUGI&%EV(&0982cbgrykxjnk8855"
 
 #pragma mark - HelloWorldLayer
 
-// HelloWorldLayer implementation
-@interface GameLayer (APINotifications)
-
-//- (void) onLoggedIn;
-//- (void) onFailedToLogIn;
-//
-//- (void) onSignedUp;
-//- (void) onFailedToSignUp;
-
-- (void) onPingLost;
-//- (void) onFailedToConnect;
-
-//- (void) onNetworkConnectionRestored;
-
-@end
-
-
 @implementation GameLayer
 
-//-(NSString*)UUIDString {
-//    CFUUIDRef theUUID = CFUUIDCreate(NULL);
-//    CFStringRef string = CFUUIDCreateString(NULL, theUUID);
-//    CFRelease(theUUID);
-//    return (NSString *)string;
-//}
-
-- (void) test {    
+- (void) test {
 
         
         //[ar addObject: hashedStr];
@@ -71,7 +46,7 @@
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	//[[NSNotificationCenter defaultCenter] removeObserver: self];
     
 	[super dealloc];
 }
@@ -102,28 +77,78 @@
 		// Add the menu to the layer
 		[self addChild:menu];
         
-        //subscribe for connection notifications
-        [[NSNotificationCenter defaultCenter] addObserver: self
-                                                 selector: @selector(onPingLost)
-                                                     name: kPingLostNotification
-                                                   object: nil];
-        
-        //
-        
-        [self test];
+        [self reconnect];
 
 	}
 	return self;
 }
 
-@end
+#pragma mark - Websocket stuff
 
-@implementation GameLayer (APINotifications)
+- (void) reconnect
+{
+    _webSocket.delegate = nil;
+    [_webSocket close];
+    [_webSocket release];
+    
+    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:
+                                                          [NSURL URLWithString:@"ws://169.254.19.146:8080/websocket/"]]];
+    _webSocket.delegate = self;
+    
+    CCLOG(@"oppening connection");
+    [_webSocket open];
+}
 
-- (void) onPingLost {
-    //the ping is lost, so let's reconnect
-    //free all the resources maybe
-    [[CCDirector sharedDirector] pushScene: [ConnectionLayer scene]];
+#pragma mark SRWebSocketDelegate
+
+- (void)webSocketDidOpen:(SRWebSocket *)webSocket;
+{
+    CCLOG(@"Websocket Connected");
+    
+    //test transmition
+    //----------------------------------------------------------------------
+    [_webSocket send: @"hi"];
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error;
+{
+    CCLOG(@"Websocket Failed With Error %@", error);
+    
+    [_webSocket release];
+    _webSocket = nil;
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message;
+{
+    CCLOG(@"Received \"%@\"", message);
+    //----------------------------------------------------------------------
+    //parse test message
+    NSError* error;
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData: message //1
+                                                         options: kNilOptions
+                                                           error: &error];
+    
+    NSDictionary *data = [json objectForKey: @"data"];
+    
+    NSString *name = [data objectForKey: @"name"];
+    NSNumber *age = [data objectForKey: @"age"];
+    NSArray *nums = [data objectForKey: @"nums"];
+    
+    CCLOG(@"name is %@", name);
+    CCLOG(@"age is %i", [age intValue]);
+    for(NSNumber *num in nums)
+    {
+        CCLOG(@"subnum is %i", [num intValue]);
+    }
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
+{
+    CCLOG(@"WebSocket closed");
+    [_webSocket release];
+    _webSocket = nil;
 }
 
 @end

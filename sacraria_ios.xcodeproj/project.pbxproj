@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B800786117044EE40084E780 /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = B800785A17044EE40084E780 /* base64.c */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B800786217044EE40084E780 /* NSData+SRB64Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = B800785D17044EE40084E780 /* NSData+SRB64Additions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B800786317044EE40084E780 /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = B800786017044EE40084E780 /* SRWebSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		B805ED5F16E77550002E03FC /* GameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B805ED5E16E77550002E03FC /* GameLayer.m */; };
 		B841994F1700230B0039F513 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B841994E1700230B0039F513 /* SystemConfiguration.framework */; };
 		B849EA9A16FB4C0900E8BBF9 /* AppHosts.plist in Resources */ = {isa = PBXBuildFile; fileRef = B849EA9916FB4C0900E8BBF9 /* AppHosts.plist */; };
@@ -151,10 +154,16 @@
 		B8D8AAB616E78D41007F6E38 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D8AAAB16E78D41007F6E38 /* AFURLConnectionOperation.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		B8D8AAB716E78D41007F6E38 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D8AAAD16E78D41007F6E38 /* AFXMLRequestOperation.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		B8D8AAB816E78D41007F6E38 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D8AAAF16E78D41007F6E38 /* UIImageView+AFNetworking.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		B8D8AABF16E79B5D007F6E38 /* APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D8AABE16E79B5D007F6E38 /* APIClient.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B800785A17044EE40084E780 /* base64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = base64.c; sourceTree = "<group>"; };
+		B800785B17044EE40084E780 /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
+		B800785C17044EE40084E780 /* NSData+SRB64Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SRB64Additions.h"; sourceTree = "<group>"; };
+		B800785D17044EE40084E780 /* NSData+SRB64Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SRB64Additions.m"; sourceTree = "<group>"; };
+		B800785E17044EE40084E780 /* SocketRocket-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SocketRocket-Prefix.pch"; sourceTree = "<group>"; };
+		B800785F17044EE40084E780 /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRWebSocket.h; sourceTree = "<group>"; };
+		B800786017044EE40084E780 /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRWebSocket.m; sourceTree = "<group>"; };
 		B805ED5D16E77550002E03FC /* GameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLayer.h; sourceTree = "<group>"; };
 		B805ED5E16E77550002E03FC /* GameLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameLayer.m; sourceTree = "<group>"; };
 		B841994E1700230B0039F513 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -452,8 +461,6 @@
 		B8D8AAAD16E78D41007F6E38 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		B8D8AAAE16E78D41007F6E38 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		B8D8AAAF16E78D41007F6E38 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
-		B8D8AABD16E79B5D007F6E38 /* APIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIClient.h; sourceTree = "<group>"; };
-		B8D8AABE16E79B5D007F6E38 /* APIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIClient.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -477,6 +484,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B800785817044ED10084E780 /* rocketSockets */ = {
+			isa = PBXGroup;
+			children = (
+				B800785A17044EE40084E780 /* base64.c */,
+				B800785B17044EE40084E780 /* base64.h */,
+				B800785C17044EE40084E780 /* NSData+SRB64Additions.h */,
+				B800785D17044EE40084E780 /* NSData+SRB64Additions.m */,
+				B800785E17044EE40084E780 /* SocketRocket-Prefix.pch */,
+				B800785F17044EE40084E780 /* SRWebSocket.h */,
+				B800786017044EE40084E780 /* SRWebSocket.m */,
+			);
+			name = rocketSockets;
+			sourceTree = "<group>";
+		};
 		B8A27B2F16FA189300E3848A /* Settings & Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -952,8 +973,7 @@
 		B8D8AAC016E79B64007F6E38 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				B8D8AABD16E79B5D007F6E38 /* APIClient.h */,
-				B8D8AABE16E79B5D007F6E38 /* APIClient.m */,
+				B800785817044ED10084E780 /* rocketSockets */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -1150,10 +1170,12 @@
 				B8D8AAB616E78D41007F6E38 /* AFURLConnectionOperation.m in Sources */,
 				B8D8AAB716E78D41007F6E38 /* AFXMLRequestOperation.m in Sources */,
 				B8D8AAB816E78D41007F6E38 /* UIImageView+AFNetworking.m in Sources */,
-				B8D8AABF16E79B5D007F6E38 /* APIClient.m in Sources */,
 				B8A27B3316FA18BD00E3848A /* Settings.m in Sources */,
 				B8A27B3616FA19E600E3848A /* GameConfig.m in Sources */,
 				B8738CE617003FCE003C5289 /* ConnectionLayer.m in Sources */,
+				B800786117044EE40084E780 /* base64.c in Sources */,
+				B800786217044EE40084E780 /* NSData+SRB64Additions.m in Sources */,
+				B800786317044EE40084E780 /* SRWebSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1218,8 +1240,8 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "DCC8B4D4-98EB-4AFF-9847-EB9D13FA7F39";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DCC8B4D4-98EB-4AFF-9847-EB9D13FA7F39";
+				PROVISIONING_PROFILE = "83A0807E-303D-47A6-B5AE-832AE503F505";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "83A0807E-303D-47A6-B5AE-832AE503F505";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

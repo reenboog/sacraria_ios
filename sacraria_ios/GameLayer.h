@@ -8,13 +8,15 @@
 
 
 #import <GameKit/GameKit.h>
+#import "SRWebSocket.h"
 
 // When you import this file, you import all the cocos2d classes
 #import "cocos2d.h"
 
 // HelloWorldLayer
-@interface GameLayer : CCLayer
+@interface GameLayer : CCLayer <SRWebSocketDelegate>
 {
+    SRWebSocket *_webSocket;
 }
 
 // returns a CCScene that contains the HelloWorldLayer as the only child
