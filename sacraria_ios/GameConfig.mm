@@ -1,6 +1,14 @@
 
 #import "GameConfig.h"
 
+float MultiplierForNatures(NatureType attacker, NatureType defender) {
+    return 1.0;
+}
+
+float MultiplierForTowerAndUnit(TowerType tower, UnitType unit) {
+    return 1.0;
+}
+
 @implementation GameConfig
 
 @synthesize gameState = _gameState;

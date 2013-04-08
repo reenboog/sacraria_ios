@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="1" height="1" tilewidth="1024" tileheight="768">
+ <tileset firstgid="1" name="map0" tilewidth="1024" tileheight="768">
+  <image source="map0.png" width="1024" height="768"/>
+ </tileset>
+ <layer name="back" width="1" height="1">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgAAAACAAC
+  </data>
+ </layer>
+ <objectgroup name="roads" width="1" height="1">
+  <object x="389" y="95">
+   <polyline points="0,0 -17,6 -24,27 -52,51 -64,73 -54,100"/>
+  </object>
+  <object x="331" y="204">
+   <polyline points="0,0 -36,-12 -88,-3 -120,19 -179,42 -209,61 -238,83 -250,116 -242,139 -218,183 -204,190 -184,220 -197,235 -207,248 -229,249"/>
+  </object>
+  <object x="192" y="657">
+   <polyline points="0,0 28,-8 34,-36 27,-59 12,-81 14,-100"/>
+  </object>
+  <object x="198" y="548">
+   <polyline points="0,0 2,-38 -6,-59 -27,-86 -30,-102 -54,-105 -94,-104"/>
+  </object>
+  <object x="205" y="656">
+   <polyline points="0,0 30,-5 48,2 70,12 96,16 120,16 143,14 170,14 210,15 227,13 257,4 281,0 292,-11 288,-33 291,-42"/>
+  </object>
+  <object x="92" y="453">
+   <polyline points="0,0 34,-14 72,-17 95,-19 113,-28 136,-32 170,-31 195,-26 218,-25 264,-25 278,-34 290,-48 315,-48 337,-56 374,-68 403,-91 444,-93 486,-110"/>
+  </object>
+  <object x="499" y="623">
+   <polyline points="0,0 14,20 39,28 72,27 112,12 154,2 165,-7 198,-13 222,-32 238,-50 238,-72 239,-96"/>
+  </object>
+  <object x="755" y="513">
+   <polyline points="0,0 -11,-28 -44,-57 -49,-77 -78,-80 -102,-93 -136,-108 -145,-123 -162,-136 -158,-169"/>
+  </object>
+  <object x="768" y="512">
+   <polyline points="0,0 32,-19 65,-36 95,-44 136,-74 142,-89 138,-111 153,-134 148,-151"/>
+  </object>
+  <object x="894" y="353">
+   <polyline points="0,0 -23,-21 -56,-37 -96,-46 -106,-64 -132,-70 -164,-90"/>
+  </object>
+  <object x="603" y="333">
+   <polyline points="0,0 28,-27 57,-43 68,-63 95,-77 116,-77"/>
+  </object>
+  <object x="727" y="251">
+   <polyline points="0,0 7,-34 15,-40 24,-60 43,-77 57,-91 73,-99 100,-111 130,-131 163,-154"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="towers" width="1" height="1">
+  <object name="0" x="394" y="88">
+   <properties>
+    <property name="neighbours" value="1"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="1" x="349" y="204">
+   <properties>
+    <property name="neighbours" value="0,2"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="2" x="73" y="458">
+   <properties>
+    <property name="neighbours" value="1,3,5"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="3" x="200" y="553">
+   <properties>
+    <property name="neighbours" value="2,4"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="4" x="174" y="657">
+   <properties>
+    <property name="neighbours" value="3,5"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="5" x="495" y="607">
+   <properties>
+    <property name="neighbours" value="4,7"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="6" x="583" y="343">
+   <properties>
+    <property name="neighbours" value="2,7,8"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="7" x="739" y="527">
+   <properties>
+    <property name="neighbours" value="5,6,9"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="8" x="712" y="259">
+   <properties>
+    <property name="neighbours" value="6,9,10"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="9" x="901" y="357">
+   <properties>
+    <property name="neighbours" value="7,8"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="10" x="900" y="102">
+   <properties>
+    <property name="neighbours" value="8"/>
+   </properties>
+   <ellipse/>
+  </object>
+ </objectgroup>
+</map>

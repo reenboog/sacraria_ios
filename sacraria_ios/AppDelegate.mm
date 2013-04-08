@@ -9,10 +9,9 @@
 #import "cocos2d.h"
 
 #import "AppDelegate.h"
-#import "ConnectionLayer.h"
+#import "GameLayer.h"
 
 #import "Settings.h"
-#import "APIClient.h"
 #import "GameConfig.h"
 
 @implementation AppController
@@ -130,7 +129,7 @@
 	if(director.runningScene == nil) {
 		// Add the first scene to the stack. The director will draw it immediately into the framebuffer. (Animation is started automatically when the view is displayed.)
 		// and add the scene to the stack. The director will run it when it automatically when the view is displayed.
-		[director runWithScene: [ConnectionLayer scene]];
+		[director runWithScene: [GameLayer scene]];
 	}
 }
 
@@ -175,7 +174,7 @@
     
     [[GameConfig sharedConfig] release];
     
-    [[APIClient sharedClient] release];
+    //[[APIClient sharedClient] release];
     
 	CC_DIRECTOR_END();
 }
