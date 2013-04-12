@@ -57,6 +57,7 @@
 -(id) init {
 	if((self = [super init])) {
         self.isTouchEnabled = YES;
+        
         _map = [CCTMXTiledMap tiledMapWithTMXFile: @"tile.tmx"];
         
         [self addChild: _map];
@@ -115,9 +116,12 @@
             
             Tower *tower = [[[Tower alloc] init] autorelease];
             tower.descriptor = towerIndex;
+            //TODO: does tower need a gameDelegate at all?
             tower.gameLayer = self;
+            //
             
             _towers[towerIndex] = tower;
+            //TODO: what about a separate layer for towers?
             [self addChild: tower z: zTower];
             
             int towerX = [[object objectForKey: @"x"] intValue];
@@ -150,6 +154,8 @@
             _roads[i].dst = _towers[roadLinks[i].second];
         }
         
+        //TODO: apply groups ownership and so on
+        
         //check path finding
         _towers[0].group = 0;
         _towers[1].group = 0;
@@ -166,7 +172,7 @@
         roadsLayer = [[[RoadsLayer alloc] initWithRoads: _roads] autorelease];
         [self addChild: roadsLayer z: 1000];
         
-        [self sendUnits: 10 fromTower: _towers[10] toTower: _towers[0]];
+        [self sendUnitsFromTower: _towers[10] toTower: _towers[0]];
         
         [self scheduleUpdate];
 
@@ -177,8 +183,28 @@
 #pragma mark - update
 
 - (void) update: (ccTime) delta {
-    for(CCNode *unit in _troopsBatch.children) {
-        unit.zOrder = 768 - unit.position.y;
+    for(Troop *troop in _troopsBatch.children) {
+        troop.zOrder = 768 - troop.position.y;
+        
+        if(troop.state == TS_Walking) {
+            
+            BOOL applyFade = NO;
+        
+            for(int i = 0; i < _towers.size(); ++i) {
+                Tower *tower = _towers[i];
+                
+                if(ccpDistance(troop.position, tower.position) < 25) {
+                    applyFade = YES;
+                    break;
+                }
+            }
+            
+            if(applyFade) {
+                [troop fade];
+            } else {
+                [troop unfade];
+            }
+        }
     }
 }
 
@@ -206,70 +232,48 @@
 
 - (void) sendUnitsFromTower: (Tower *) src toTower: (Tower *) dst {
     
-    TowerList path = [src pathToTower: dst];
+    TowerList keyTowers = [src pathToTower: dst];
+    
+    if(!keyTowers.empty() && src.numOfUnits > 0) {
         
-    if(!path.empty() && src.numOfUnits > 1) {
-        int armySize = src.numOfUnits / 2;
-        //loop through all the troops
+        //prepare the path
+        TowerPathVector path;
+        
+        for(int i = 0; i < keyTowers.size() - 1; ++i) {
+            Tower *from = keyTowers[i];
+            Tower *to = keyTowers[i + 1];
+            
+            Road road = [self roadBetweenTower: from andTower: to];
+            
+            path.push_back(make_pair(road.points, to));
+        }
+        
+        //1 unit to send as a minimum
+        int armySize = MAX(1, src.numOfUnits / 2);
+
         int armyIndex = 0;
-        int troopSizeForTowerType = TroopSizeForUnitType((UnitType)src.type);
+        int troopSizeForTowerType = TroopSizeForUnitType((UnitType)src.type, src.nature);
         do {
             
-            int troopSize;
+            int troopSize = troopSizeForTowerType;
             
-            if(armySize - troopSizeForTowerType >= 0) {
-                troopSize = troopSizeForTowerType;
-            } else {
-                troopSize = troopSizeForTowerType - armySize;
-            }
-        
-            NSMutableArray *unitWholePathAcitons = [NSMutableArray array];
-            
-            //so apply this path to a specified unit type
-            for(int i = 0; i < path.size() - 1; ++i) {
-                Tower *from = path[i];
-                Tower *to = path[i + 1];
-                Road road = [self roadBetweenTower: from andTower: to];
-                
-                NSMutableArray *segmentMoveActions = [NSMutableArray array];
-                for(int j = 0; j < road.points.size(); ++j) {
-                    CCAction *segmentMove = [CCMoveTo actionWithDuration: 0.3 position: road.points[j]];
-                    [segmentMoveActions addObject: segmentMove];
-                }
-                
-                CCAction *roadAction = [CCSequence actions:
-                                                            [CCSequence actionWithArray: segmentMoveActions],
-                                                            [CCCallBlock actionWithBlock:^{
-                                                                CCLOG(@"one segment completed.");
-                                                            }],
-                                                            nil];
-                [unitWholePathAcitons addObject: roadAction];
+            if(armySize - troopSizeForTowerType < 0) {
+                troopSize = troopSizeForTowerType - armySize;;
             }
             
-            //create the unit and apply these actions
-            //CCSprite *unit = [CCSprite spriteWithFile: [NSString stringWithFormat: @"unit%i.png", (int)src.type]];
-            //unit.position = src.position;
-            //[self addChild: unit z: zUnit];
-            
-            int units = 10;
-            
-            Troop *troop = [Troop troopWithType: (UnitType)src.type nature: src.nature andAmount: units];
+            Troop *troop = [Troop troopWithType: (UnitType)src.type owner: src.owner tower: src group: src.group nature: src.nature amount: troopSize path: path];
             troop.position = src.position;
+            [troop goAfterDelay: armyIndex * kArmyAttackDelay];
             
             [_troopsBatch addChild: troop];
-            
-            [troop runAction:
-                            [CCSequence actions:
-                                                [CCDelayTime actionWithDuration: armyIndex * 0.3],
-                                                [CCSequence actionWithArray: unitWholePathAcitons], nil]];
-            
-            [src sendUnitToTower: dst];
             
             armyIndex++;
             armySize -= troopSize;
         } while(armySize > 0);
+        
+        [src sendTroops];
     } else {
-        CCLOG(@"can't get %i from %i!", src.descriptor, dst.descriptor);
+        CCLOG(@"can't send units from %i to %i! not enough units", src.descriptor, dst.descriptor);
     }
 }
 

@@ -13,21 +13,53 @@
 @interface Troop : CCNode {
     int _health;
     int _numOfUnits;
+    int _owner;
+    int _group;
+    Tower *_tower;
 
     NatureType _nature;
     UnitType _type;
+
+    TroopState _state;
     
     CCSprite *_spr;
     
-    TowerPathVector path;
+    TowerPathVector _path;
 }
 
 @property (nonatomic, readonly) int health;
 @property (nonatomic, readonly) int numOfUnits;
 @property (nonatomic, readonly) NatureType nature;
 @property (nonatomic, readonly) UnitType type;
+@property (nonatomic, readonly) int owner;
+@property (nonatomic ,readonly) int group;
 
-+ (Troop *) troopWithType: (UnitType) type nature: (NatureType) nature andAmount: (int) units;
-- (Troop *) initWithType: (UnitType) type nature: (NatureType) nature andAmount: (int) units;
+@property (nonatomic, readonly) Tower *tower;
+
+@property (nonatomic, readonly) TroopState state;
+
+//@property (nonatomic, assign) TowerPathVector path;
+
++ (Troop *) troopWithType: (UnitType) type
+                    owner: (int) owner
+                    tower: (Tower *) tower
+                    group: (int) group
+                   nature: (NatureType) nature
+                   amount: (int) units
+                     path: (TowerPathVector) path;
+
+- (Troop *) initWithType: (UnitType) type
+                   owner: (int) owner
+                   tower: (Tower *) tower
+                   group: (int) group
+                  nature: (NatureType) nature
+                  amount: (int) units
+                    path: (TowerPathVector) path;
+
+- (void) goAfterDelay: (float) delay;
+- (void) go;
+
+- (void) fade;
+- (void) unfade;
 
 @end

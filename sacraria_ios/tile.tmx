@@ -109,7 +109,7 @@
   </object>
   <object name="2" x="73" y="458">
    <properties>
-    <property name="neighbours" value="1,3,5"/>
+    <property name="neighbours" value="1,3,6"/>
    </properties>
    <ellipse/>
   </object>

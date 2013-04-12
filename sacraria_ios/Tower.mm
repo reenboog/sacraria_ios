@@ -10,18 +10,31 @@
 
 @interface Tower ()
 
-@property (nonatomic, readonly) const TowerList &neighbours;
+@property (nonatomic, readonly) TowerList neighbours;
 @property (nonatomic, readwrite) int numOfUnits;
 @end
 
 TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerList excludedTowers) {
     path.push_back(from);
 
+    //TODO: replace this algorigth with any distance-base one
     //never return any containers as a property:
     //its copy is returned, not the container itself
     //let's just return a const reference for a while
-    TowerList::const_iterator itEnd = from.neighbours.end();
-    for(TowerList::const_iterator it = from.neighbours.begin(); it != itEnd; ++it) {
+    TowerList neighbours = from.neighbours;
+    TowerList::iterator itEnd = neighbours.end();
+    
+    //check direct links first
+    for(TowerList::iterator it = neighbours.begin(); it != itEnd; ++it) {
+        Tower *neighbour = *it;
+        
+        if(neighbour == to) {
+            path.push_back(neighbour);
+            return path;
+        }
+    }
+
+    for(TowerList::iterator it = neighbours.begin(); it != itEnd; ++it) {
         Tower *neighbour = *it;
         
         if(neighbour == to) {
@@ -76,7 +89,8 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
 - (Tower *) init {
     if((self = [super init])) {
         
-        _numOfUnits = 30;
+        //TODO:replace this random with valid initWith...
+        _numOfUnits = random() % 10;
         //debug only
         _spr = [CCSprite spriteWithFile: @"Icon.png"];
         [self addChild: _spr];
@@ -162,10 +176,10 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
     return path;
 }
 
-- (void) sendUnitToTower: (Tower *) tower {
-    self.numOfUnits = _numOfUnits / 2;
+- (void) sendTroops {
+    int unitsToSend = MAX(_numOfUnits / 2, 1);
     
-    //blahblah
+    self.numOfUnits = _numOfUnits - unitsToSend;
 }
 
 - (void) addCrystal: (int) crystal {
@@ -194,7 +208,9 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
 }
 
 - (void) setNumOfUnits: (int) numOfUnits {
-    _numOfUnits = MAX(1, numOfUnits);
+    //CCLOG(@"numOfUnits: %i", numOfUnits);
+    
+    _numOfUnits = numOfUnits;//MAX(1, numOfUnits);
     unitsLabel.string = [NSString stringWithFormat: @"%i", _numOfUnits];
 }
 

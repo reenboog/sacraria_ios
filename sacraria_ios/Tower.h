@@ -68,7 +68,7 @@ using namespace std;
 
 - (TowerList) pathToTower: (Tower *) tower;
 
-- (void) sendUnitToTower: (Tower *) tower;
+- (void) sendTroops;
 
 - (void) addCrystal: (int) crystal;
 

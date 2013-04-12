@@ -14,6 +14,8 @@ using namespace std;
 #define kGameSessionRefreshPeriod           5
 #define kMaxNumOfReconnections              5
 
+#define kArmyAttackDelay                    0.25f
+
 //network notifications
 #define kPingLostNotification               @"pingLostNotification"
 
@@ -72,6 +74,13 @@ typedef enum {
     
 } UnitType;
 
+typedef enum {
+    TS_Idle,
+    TS_Walking,
+    TS_Fighting,
+    TS_ReadyToCleanUp
+} TroopState;
+
 typedef list<int> IntList;
 typedef vector<int> IntVector;
 typedef vector<CGPoint> PointVector;
@@ -102,8 +111,10 @@ extern "C" {
 
 float MultiplierForNatures(NatureType attacker, NatureType defender);
 float MultiplierForTowerAndUnit(TowerType tower, UnitType unit);
-int TroopSizeForUnitType(UnitType type);
+
+int TroopSizeForUnitType(UnitType type, NatureType nature);
 int HealthForUnitTypeOfNature(UnitType type, NatureType nature);
+float SpeedForUnitTypeOfNature(UnitType type, NatureType nature);
     
 #ifdef __cplusplus
 }
