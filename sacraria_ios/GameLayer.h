@@ -14,16 +14,30 @@
 #import "cocos2d.h"
 #import "GameConfig.h"
 
+@class RoadsLayer;
+
 // HelloWorldLayer
-@interface GameLayer : CCLayer <SRWebSocketDelegate>
+@interface GameLayer : CCLayer <SRWebSocketDelegate, GameDelegate>
 {
     SRWebSocket *_webSocket;
     
     //CCSprite *back;
     CCTMXTiledMap *_map;
-    Field _roads;
+    RoadVector _roads;
 
-    TowerList towers;
+    TowerList _towers;
+    TowerList _selectedTowers;
+    TroopVector _troops;
+    
+    CGPoint _touchPos;
+    
+    //CCSpriteBatchNode *_troopsBatch;
+    CCLayer *_troopsBatch;
+    
+    int _ownershipId;
+    
+    //debug stuff
+    RoadsLayer *roadsLayer;
 }
 
 // returns a CCScene that contains the HelloWorldLayer as the only child

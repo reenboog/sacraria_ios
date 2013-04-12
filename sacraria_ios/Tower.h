@@ -11,6 +11,8 @@
 
 using namespace std;
 
+@class GameLayer;
+
 @interface Tower : CCNode {
     int _descriptor;
     int _numOfUnits;
@@ -26,10 +28,12 @@ using namespace std;
     TowerList _neighbours;
     
     //debug purpose only
-    CCSprite *spr;
+    CCSprite *_spr;
     CCLabelTTF *label;
+    CCLabelTTF *unitsLabel;
+    CCLabelTTF *typeLabel;
     
-    //GameDelegate *gameLayer;
+    id<GameDelegate> _gameLayer;
 }
 
 @property (nonatomic/*, readonly*/) int descriptor;
@@ -40,6 +44,8 @@ using namespace std;
 
 @property (nonatomic, assign) TowerType type;
 @property (nonatomic, assign) NatureType nature;
+
+@property (nonatomic, assign/*, readonly*/) id<GameDelegate> gameLayer;
 
 - (void) addNeighbour: (Tower *) neighbour;
 - (BOOL) isNeighbour: (Tower *) neighbour;
@@ -60,7 +66,9 @@ using namespace std;
              nature: (NatureType) attackerNature
           fromOwner: (int) owner;
 
-- (BOOL) sendUnitsToTower: (Tower *) tower;
+- (TowerList) pathToTower: (Tower *) tower;
+
+- (void) sendUnitToTower: (Tower *) tower;
 
 - (void) addCrystal: (int) crystal;
 

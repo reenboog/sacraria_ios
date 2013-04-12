@@ -11,9 +11,10 @@
 @interface Tower ()
 
 @property (nonatomic, readonly) const TowerList &neighbours;
+@property (nonatomic, readwrite) int numOfUnits;
 @end
 
-TowerPathList GetPathFromTowerToTower(Tower *from, Tower *to, TowerPathList path, TowerList excludedTowers) {
+TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerList excludedTowers) {
     path.push_back(from);
 
     //never return any containers as a property:
@@ -42,7 +43,7 @@ TowerPathList GetPathFromTowerToTower(Tower *from, Tower *to, TowerPathList path
             if(!isThisNeighbourExcluded && neighbour.group == to.group) {
                 excludedTowers.push_back(from);
                 
-                TowerPathList thePath = GetPathFromTowerToTower(neighbour, to, path, excludedTowers);
+                TowerList thePath = GetPathFromTowerToTower(neighbour, to, path, excludedTowers);
                 if(thePath.empty()) {
                     continue;
                 } else {
@@ -52,7 +53,7 @@ TowerPathList GetPathFromTowerToTower(Tower *from, Tower *to, TowerPathList path
         }
     }
     
-    return TowerPathList();
+    return TowerList();
 }
 
 @implementation Tower
@@ -64,6 +65,7 @@ TowerPathList GetPathFromTowerToTower(Tower *from, Tower *to, TowerPathList path
 @synthesize type = _type;
 @synthesize nature = _nature;
 @synthesize shieldLevel = _shieldLevel;
+@synthesize gameLayer = _gameLayer;
 
 @synthesize neighbours = _neighbours;
 
@@ -73,14 +75,28 @@ TowerPathList GetPathFromTowerToTower(Tower *from, Tower *to, TowerPathList path
 
 - (Tower *) init {
     if((self = [super init])) {
+        
+        _numOfUnits = 30;
         //debug only
-        spr = [CCSprite spriteWithFile: @"Icon.png"];
-        [self addChild: spr];
+        _spr = [CCSprite spriteWithFile: @"Icon.png"];
+        [self addChild: _spr];
         
         label = [CCLabelTTF labelWithString: @"" fontName: @"Arial" fontSize: 20];
+        label.position = ccp(40, 40);
         [self addChild: label];
         
-        label.position = ccp(40, 40);
+        unitsLabel = [CCLabelTTF labelWithString: @"" fontName: @"Arial" fontSize: 20];
+        unitsLabel.position = ccp(40, -40);
+        [self addChild: unitsLabel];
+        
+        typeLabel = [CCLabelTTF labelWithString: @"" fontName: @"Arial" fontSize: 20];
+        typeLabel.position = ccp(-40, -40);
+        [self addChild: typeLabel];
+        
+        [self setContentSize: CGSizeMake(100, 100)];
+        
+        //let's just use default time for now
+        [self schedule: @selector(spawnUnits:) interval: 1];
         //
     }
     
@@ -132,36 +148,24 @@ TowerPathList GetPathFromTowerToTower(Tower *from, Tower *to, TowerPathList path
     }
 }
 
-- (BOOL) sendUnitsToTower: (Tower *) tower {
+- (TowerList) pathToTower: (Tower *) tower {
     
-    if(tower == self) {
-        return NO;
-    }
-    
-    TowerPathList path;
+    TowerList path;
     TowerList excludedTowers;
 
-    //excludedTowers.push_back(tower);
-    
-    path = GetPathFromTowerToTower(tower, self, TowerPathList(), excludedTowers);
-    
-    if(!path.empty()) {
-        //get full path to the destination tower
-        //apply this path to a game layer
-        //we a're looking the backward path (it's faster) from the destination point to the initial one,
-        //so we're to reverse the path if found any
+    if(tower != self) {
+        path = GetPathFromTowerToTower(tower, self, TowerList(), excludedTowers);
+        
         reverse(path.begin(), path.end());
-        
-        for(int i = 0; i < path.size(); ++i) {
-            CCLOG(@"%i", path[i].descriptor);
-        }
-        //get roads for this path
-        
-        return YES;
-    } else {
-        //can't send the unit to the specified point
-        return NO;
     }
+
+    return path;
+}
+
+- (void) sendUnitToTower: (Tower *) tower {
+    self.numOfUnits = _numOfUnits / 2;
+    
+    //blahblah
 }
 
 - (void) addCrystal: (int) crystal {
@@ -178,10 +182,20 @@ TowerPathList GetPathFromTowerToTower(Tower *from, Tower *to, TowerPathList path
 - (void) setGroup:(int)group {
     _group = group;
     switch(group) {
-        case 0: spr.color = ccc3(255, 0, 0); break;
-        case 1: spr.color = ccc3(0, 255, 0); break;
-        case 2: spr.color = ccc3(255, 0, 255); break;
+        case 0: _spr.color = ccc3(255, 0, 0); break;
+        case 1: _spr.color = ccc3(0, 255, 0); break;
+        case 2: _spr.color = ccc3(255, 0, 255); break;
     }
+}
+
+- (void) spawnUnits: (ccTime) dt {
+    
+    self.numOfUnits = _numOfUnits + 1;
+}
+
+- (void) setNumOfUnits: (int) numOfUnits {
+    _numOfUnits = MAX(1, numOfUnits);
+    unitsLabel.string = [NSString stringWithFormat: @"%i", _numOfUnits];
 }
 
 @end

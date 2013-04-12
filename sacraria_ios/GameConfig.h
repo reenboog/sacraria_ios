@@ -8,11 +8,8 @@
 
 using namespace std;
 
-typedef list<int> IntList;
-typedef vector<int> IntVector;
-typedef vector<CGPoint> PointVector;
-
-#define zTower 2000
+#define zTower      2000
+#define zTroop      2001
 
 #define kGameSessionRefreshPeriod           5
 #define kMaxNumOfReconnections              5
@@ -37,6 +34,7 @@ typedef vector<CGPoint> PointVector;
 
 //towers
 #define kTowerInvalidGroup                  -93721
+#define kOwnerNoOne                         -24343
 
 typedef enum {
     GS_idle,
@@ -74,17 +72,29 @@ typedef enum {
     
 } UnitType;
 
+typedef list<int> IntList;
+typedef vector<int> IntVector;
+typedef vector<CGPoint> PointVector;
+
+typedef pair<int, int> IntIntPair;
+typedef vector<IntIntPair> IntPairsVector;
+
+@class Tower;
+@class Troop;
+
 typedef struct {
     PointVector points;
+    Tower *src;
+    Tower *dst;
 } Road;
 
 typedef vector<Road> RoadVector;
-typedef RoadVector Field;
-
-@class Tower;
+//typedef RoadVector Field;
 
 typedef vector<Tower *> TowerList;
-typedef vector<Tower *> TowerPathList;
+typedef vector<Troop *> TroopVector;
+typedef pair<PointVector, Tower *> PathChunkPair;
+typedef vector<PathChunkPair> TowerPathVector;
 
 #ifdef __cplusplus
 extern "C" {
@@ -92,10 +102,20 @@ extern "C" {
 
 float MultiplierForNatures(NatureType attacker, NatureType defender);
 float MultiplierForTowerAndUnit(TowerType tower, UnitType unit);
+int TroopSizeForUnitType(UnitType type);
+int HealthForUnitTypeOfNature(UnitType type, NatureType nature);
     
 #ifdef __cplusplus
 }
 #endif
+
+//protocols
+
+@protocol GameDelegate <NSObject>
+
+- (void) sendUnitsFromTower: (Tower *) src toTower: (Tower *) dst;
+
+@end
 
 @interface GameConfig: NSObject {
     GameState _gameState;

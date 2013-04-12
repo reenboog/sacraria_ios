@@ -7,8 +7,12 @@
 //
 
 #import "RoadsLayer.h"
+#import "Tower.h"
 
 @implementation RoadsLayer
+
+@synthesize selectedTowers = _selectedTowers;
+@synthesize touchPos = _touchPos;
 
 - (RoadsLayer *) initWithRoads: (const RoadVector&) roads {
     
@@ -31,6 +35,11 @@
 
             ccDrawLine(a, b);
         }
+    }
+    
+    //draw selected towers
+    for(TowerList::iterator it = _selectedTowers.begin(); it != _selectedTowers.end(); ++it) {
+        ccDrawLine((*it).position, _touchPos);
     }
     
 }

@@ -13,6 +13,7 @@
 
 #import "RoadsLayer.h"
 #import "Tower.h"
+#import "Troop.h"
 
 // Needed to obtain the Navigation Controller
 #import "AppDelegate.h"
@@ -55,13 +56,19 @@
 
 -(id) init {
 	if((self = [super init])) {
+        self.isTouchEnabled = YES;
         _map = [CCTMXTiledMap tiledMapWithTMXFile: @"tile.tmx"];
         
         [self addChild: _map];
         
+        _troopsBatch = [CCLayer node];
+        [self addChild: _troopsBatch z: zTroop];
+        
         CCTMXObjectGroup *roadsGroup = [_map objectGroupNamed: @"roads"];
         NSMutableArray *roadsObjects = [roadsGroup objects];
         NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString: @", "];
+        
+        IntPairsVector roadLinks;
 
         for(id object in roadsObjects) {
             Road road;
@@ -70,6 +77,11 @@
             
             int baseX = [[object objectForKey: @"x"] intValue];
             int baseY = [[object objectForKey: @"y"] intValue];
+            
+            int srcTowerDesc = [[object valueForKey: @"srcTower"] intValue];
+            int dstTowerDesc = [[object valueForKey: @"dstTower"] intValue];
+            
+            roadLinks.push_back(make_pair(srcTowerDesc, dstTowerDesc));
             
             if(pointsString != NULL) {
                 NSArray *pointsArray = [pointsString componentsSeparatedByCharactersInSet:characterSet];
@@ -91,7 +103,7 @@
         CCTMXObjectGroup *towersGroup = [_map objectGroupNamed: @"towers"];
         NSMutableArray *towersObjects = [towersGroup objects];
         
-        towers.resize(towersObjects.count);
+        _towers.resize(towersObjects.count);
         vector<IntList> towerNeighbourDescriptors;
         
         towerNeighbourDescriptors.resize(towersObjects.count);
@@ -103,8 +115,9 @@
             
             Tower *tower = [[[Tower alloc] init] autorelease];
             tower.descriptor = towerIndex;
+            tower.gameLayer = self;
             
-            towers[towerIndex] = tower;
+            _towers[towerIndex] = tower;
             [self addChild: tower z: zTower];
             
             int towerX = [[object objectForKey: @"x"] intValue];
@@ -123,35 +136,199 @@
         }
         
         //apply neighbours
-        for(int i = 0; i < towers.size(); ++i) {
+        for(int i = 0; i < _towers.size(); ++i) {
             for(IntList::iterator it = towerNeighbourDescriptors[i].begin(); it != towerNeighbourDescriptors[i].end(); ++it) {
-                Tower *neighbour = towers[*it];
+                Tower *neighbour = _towers[*it];
                 
-                [towers[i] addNeighbour: neighbour];
+                [_towers[i] addNeighbour: neighbour];
             }
         }
         
-        //check path finding
-        towers[0].group = 0;
-        towers[1].group = 0;
-        towers[2].group = 2;
-        towers[3].group = 1;
-        towers[4].group = 0;
-        towers[6].group = 0;
-        towers[7].group = 1;
-        
-        if([towers[10] sendUnitsToTower: towers[6]]) {
-            CCLOG(@"ok!");
+        //apply roads
+        for(int i = 0; i < roadLinks.size(); ++i) {
+            _roads[i].src = _towers[roadLinks[i].first];
+            _roads[i].dst = _towers[roadLinks[i].second];
         }
         
-        RoadsLayer *roadsLayer = [[[RoadsLayer alloc] initWithRoads: _roads] autorelease];
+        //check path finding
+        _towers[0].group = 0;
+        _towers[1].group = 0;
+        _towers[2].group = 0;
+        _towers[3].group = 0;
+        _towers[4].group = 0;
+        _towers[5].group = 0;
+        _towers[6].group = 1;
+        _towers[7].group = 0;
+        _towers[8].group = 0;
+        _towers[9].group = 0;
+        _towers[10].group = 0;
+                
+        roadsLayer = [[[RoadsLayer alloc] initWithRoads: _roads] autorelease];
         [self addChild: roadsLayer z: 1000];
-		      
-        //[self reconnect];
+        
+        [self sendUnits: 10 fromTower: _towers[10] toTower: _towers[0]];
+        
+        [self scheduleUpdate];
 
 	}
 	return self;
 }
+
+#pragma mark - update
+
+- (void) update: (ccTime) delta {
+    for(CCNode *unit in _troopsBatch.children) {
+        unit.zOrder = 768 - unit.position.y;
+    }
+}
+
+#pragma mark - Game Delegate
+
+- (Road) roadBetweenTower: (Tower *) src andTower: (Tower *) dst {
+    //direct links only!
+    Road road = {PointVector(), nil, nil};
+    for(RoadVector::iterator it = _roads.begin(); it != _roads.end(); ++it) {
+        if(it->src == src && it->dst == dst) {
+            road = *it;
+            break;
+        } else if(it->src == dst && it->dst == src) {
+            //there's a road in opposite direction, so let's reverse it
+            road = *it;
+            reverse(road.points.begin(), road.points.end());
+            road.src = src;
+            road.dst = dst;
+            break;
+        }
+    }
+    
+    return road;
+}
+
+- (void) sendUnitsFromTower: (Tower *) src toTower: (Tower *) dst {
+    
+    TowerList path = [src pathToTower: dst];
+        
+    if(!path.empty() && src.numOfUnits > 1) {
+        int armySize = src.numOfUnits / 2;
+        //loop through all the troops
+        int armyIndex = 0;
+        int troopSizeForTowerType = TroopSizeForUnitType((UnitType)src.type);
+        do {
+            
+            int troopSize;
+            
+            if(armySize - troopSizeForTowerType >= 0) {
+                troopSize = troopSizeForTowerType;
+            } else {
+                troopSize = troopSizeForTowerType - armySize;
+            }
+        
+            NSMutableArray *unitWholePathAcitons = [NSMutableArray array];
+            
+            //so apply this path to a specified unit type
+            for(int i = 0; i < path.size() - 1; ++i) {
+                Tower *from = path[i];
+                Tower *to = path[i + 1];
+                Road road = [self roadBetweenTower: from andTower: to];
+                
+                NSMutableArray *segmentMoveActions = [NSMutableArray array];
+                for(int j = 0; j < road.points.size(); ++j) {
+                    CCAction *segmentMove = [CCMoveTo actionWithDuration: 0.3 position: road.points[j]];
+                    [segmentMoveActions addObject: segmentMove];
+                }
+                
+                CCAction *roadAction = [CCSequence actions:
+                                                            [CCSequence actionWithArray: segmentMoveActions],
+                                                            [CCCallBlock actionWithBlock:^{
+                                                                CCLOG(@"one segment completed.");
+                                                            }],
+                                                            nil];
+                [unitWholePathAcitons addObject: roadAction];
+            }
+            
+            //create the unit and apply these actions
+            //CCSprite *unit = [CCSprite spriteWithFile: [NSString stringWithFormat: @"unit%i.png", (int)src.type]];
+            //unit.position = src.position;
+            //[self addChild: unit z: zUnit];
+            
+            int units = 10;
+            
+            Troop *troop = [Troop troopWithType: (UnitType)src.type nature: src.nature andAmount: units];
+            troop.position = src.position;
+            
+            [_troopsBatch addChild: troop];
+            
+            [troop runAction:
+                            [CCSequence actions:
+                                                [CCDelayTime actionWithDuration: armyIndex * 0.3],
+                                                [CCSequence actionWithArray: unitWholePathAcitons], nil]];
+            
+            [src sendUnitToTower: dst];
+            
+            armyIndex++;
+            armySize -= troopSize;
+        } while(armySize > 0);
+    } else {
+        CCLOG(@"can't get %i from %i!", src.descriptor, dst.descriptor);
+    }
+}
+
+#pragma mark - Touches
+
+- (void) registerWithTouchDispatcher
+{
+	[[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
+}
+
+- (BOOL) ccTouchBegan: (UITouch *) touch withEvent: (UIEvent *) event
+{
+    return YES;
+}
+
+- (void) ccTouchMoved: (UITouch *) touch withEvent: (UIEvent *) event
+{
+    _touchPos = [touch locationInView: [touch view]];
+    _touchPos = [[CCDirector sharedDirector] convertToGL: _touchPos];
+    _touchPos = [self convertToNodeSpace: _touchPos];
+
+    for(TowerList::iterator it = _towers.begin(); it != _towers.end(); ++it) {
+        if(ccpDistance((*it).position, _touchPos) < 100 &&
+           std::find(_selectedTowers.begin(), _selectedTowers.end(), *it) == _selectedTowers.end() &&
+           (*it).owner == _ownershipId) {
+            _selectedTowers.push_back(*it);
+            
+            roadsLayer.selectedTowers = _selectedTowers;
+        }
+    }
+    
+    roadsLayer.touchPos = _touchPos;
+}
+
+- (void) ccTouchEnded: (UITouch *) touch withEvent: (UIEvent *) event
+{
+    _touchPos = [touch locationInView: [touch view]];
+    _touchPos = [[CCDirector sharedDirector] convertToGL: _touchPos];
+    _touchPos = [self convertToNodeSpace: _touchPos];
+    
+    CCLOG(@"TOUCH: %i, %i", (int)_touchPos.x, (int)_touchPos.y);
+    
+    for(TowerList::iterator it = _towers.begin(); it != _towers.end(); ++it) {
+        if(ccpDistance((*it).position, _touchPos) < 100) {
+            CCLOG(@"CONTAINS!!!!!");
+            for(TowerList::iterator selIt = _selectedTowers.begin(); selIt != _selectedTowers.end(); ++selIt) {
+                if((*selIt) != (*it)) {
+                    [self sendUnitsFromTower: (*selIt) toTower: (*it)];
+                }
+            }
+
+            break;
+        }
+    }
+    
+    _selectedTowers.clear();
+    roadsLayer.selectedTowers = _selectedTowers;
+}
+
 
 #pragma mark - Websocket stuff
 

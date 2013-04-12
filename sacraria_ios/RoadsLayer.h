@@ -11,7 +11,13 @@
 
 @interface RoadsLayer : CCLayer {
     RoadVector _roads;
+    
+    TowerList _selectedTowers;
+    CGPoint _touchPos;
 }
+
+@property (nonatomic, assign) TowerList selectedTowers;
+@property (nonatomic, assign) CGPoint touchPos;
 
 - (RoadsLayer *) initWithRoads: (const RoadVector&) roads;
 

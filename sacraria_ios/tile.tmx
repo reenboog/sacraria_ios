@@ -10,39 +10,87 @@
  </layer>
  <objectgroup name="roads" width="1" height="1">
   <object x="389" y="95">
+   <properties>
+    <property name="dstTower" value="1"/>
+    <property name="srcTower" value="0"/>
+   </properties>
    <polyline points="0,0 -17,6 -24,27 -52,51 -64,73 -54,100"/>
   </object>
   <object x="331" y="204">
+   <properties>
+    <property name="dstTower" value="2"/>
+    <property name="srcTower" value="1"/>
+   </properties>
    <polyline points="0,0 -36,-12 -88,-3 -120,19 -179,42 -209,61 -238,83 -250,116 -242,139 -218,183 -204,190 -184,220 -197,235 -207,248 -229,249"/>
   </object>
-  <object x="192" y="657">
+  <object x="193" y="657">
+   <properties>
+    <property name="dstTower" value="3"/>
+    <property name="srcTower" value="4"/>
+   </properties>
    <polyline points="0,0 28,-8 34,-36 27,-59 12,-81 14,-100"/>
   </object>
   <object x="198" y="548">
+   <properties>
+    <property name="dstTower" value="2"/>
+    <property name="srcTower" value="3"/>
+   </properties>
    <polyline points="0,0 2,-38 -6,-59 -27,-86 -30,-102 -54,-105 -94,-104"/>
   </object>
   <object x="205" y="656">
+   <properties>
+    <property name="dstTower" value="5"/>
+    <property name="srcTower" value="4"/>
+   </properties>
    <polyline points="0,0 30,-5 48,2 70,12 96,16 120,16 143,14 170,14 210,15 227,13 257,4 281,0 292,-11 288,-33 291,-42"/>
   </object>
   <object x="92" y="453">
+   <properties>
+    <property name="dstTower" value="6"/>
+    <property name="srcTower" value="2"/>
+   </properties>
    <polyline points="0,0 34,-14 72,-17 95,-19 113,-28 136,-32 170,-31 195,-26 218,-25 264,-25 278,-34 290,-48 315,-48 337,-56 374,-68 403,-91 444,-93 486,-110"/>
   </object>
   <object x="499" y="623">
+   <properties>
+    <property name="dstTower" value="7"/>
+    <property name="srcTower" value="5"/>
+   </properties>
    <polyline points="0,0 14,20 39,28 72,27 112,12 154,2 165,-7 198,-13 222,-32 238,-50 238,-72 239,-96"/>
   </object>
   <object x="755" y="513">
+   <properties>
+    <property name="dstTower" value="6"/>
+    <property name="srcTower" value="7"/>
+   </properties>
    <polyline points="0,0 -11,-28 -44,-57 -49,-77 -78,-80 -102,-93 -136,-108 -145,-123 -162,-136 -158,-169"/>
   </object>
   <object x="768" y="512">
+   <properties>
+    <property name="dstTower" value="9"/>
+    <property name="srcTower" value="7"/>
+   </properties>
    <polyline points="0,0 32,-19 65,-36 95,-44 136,-74 142,-89 138,-111 153,-134 148,-151"/>
   </object>
   <object x="894" y="353">
+   <properties>
+    <property name="dstTower" value="8"/>
+    <property name="srcTower" value="9"/>
+   </properties>
    <polyline points="0,0 -23,-21 -56,-37 -96,-46 -106,-64 -132,-70 -164,-90"/>
   </object>
   <object x="603" y="333">
+   <properties>
+    <property name="dstTower" value="8"/>
+    <property name="srcTower" value="6"/>
+   </properties>
    <polyline points="0,0 28,-27 57,-43 68,-63 95,-77 116,-77"/>
   </object>
   <object x="727" y="251">
+   <properties>
+    <property name="dstTower" value="10"/>
+    <property name="srcTower" value="8"/>
+   </properties>
    <polyline points="0,0 7,-34 15,-40 24,-60 43,-77 57,-91 73,-99 100,-111 130,-131 163,-154"/>
   </object>
  </objectgroup>
