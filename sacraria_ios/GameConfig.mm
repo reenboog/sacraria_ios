@@ -98,6 +98,29 @@ float FightDelayForTroopTypeAndNature(UnitType type, NatureType nature) {
     return times[nature][type];
 }
 
+int RandomDistanceForFight() {
+    const int numOfDistances = 3;
+    static int distances[numOfDistances] = {
+      30, 40, 50
+    };
+    
+    static int counter = 0;
+    static int distance = distances[counter % numOfDistances];
+    
+    if(counter % 2 == 0) {
+        distance = distances[counter % numOfDistances];
+    }
+    
+    counter++;
+    
+//    //3 calls for 2 gith pairs
+//    if(counter > 6) {
+//        counter = 0;
+//    }
+    
+    return distance;
+}
+
 NSString * AttackAnimationNameForUnitType(UnitType type, NatureType nature) {
     
     int maxNumOfAnimations = 1;

@@ -39,7 +39,7 @@ using namespace std;
 #define kOwnerNoOne                         -24343
 
 #define kFightMinimalDistance               10
-#define kTroopFightMinimalDistance          100
+#define kTroopFightMinimalDistance          300
 
 #define ccSize(w, h) (CGSizeMake(w, h))
 
@@ -135,6 +135,7 @@ float RespawnTimeForTowerTypeOfNature(UnitType type, NatureType nature);
 CGSize SizeForTroopTypeAndNature(UnitType type, NatureType nature);
 float FightDelayForTroopTypeAndNature(UnitType type, NatureType nature);
 NSString * AttackAnimationNameForUnitType(UnitType type, NatureType nature);
+int RandomDistanceForFight();
     
 #ifdef __cplusplus
 }

@@ -235,6 +235,7 @@
     switch (_gameType) {
         case GT_CaptureBase:
             if(_towerToCapture.owner != kOwnerNoOne) {
+                CCLOG(@"capture base gameover");
                 [self onGameOver];
             }
             break;
@@ -242,7 +243,7 @@
             //just check whether all the towers have the same group
             for(TowerList::iterator it = _towers.begin(); it != _towers.end(); ++it) {
                 if((*it).group != _towers[0].group) {
-                    break;
+                    return;
                 }
             }
             [self onGameOver];
@@ -250,12 +251,6 @@
 }
 
 - (void) checkIfAnyoneWantsToFight {
-    
-    static int i1 = 0;
-    
-    if(i1 > 0) {
-        return;
-    }
     
     CCArray *troops = _troopsBatch.children;
     int troopsCount = troops.count;
@@ -277,7 +272,6 @@
                 } else {
                     [rightTroop attackTroop: leftTroop];
                 }
-                i1++;
                 //change the initial fighetr side
                 _shouldFightOnFirstTrooperSide = !_shouldFightOnFirstTrooperSide;
             }
