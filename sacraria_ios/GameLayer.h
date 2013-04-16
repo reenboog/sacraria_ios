@@ -27,12 +27,20 @@
 
     TowerList _towers;
     TowerList _selectedTowers;
-    TroopVector _troops;
+    //TroopVector _troops;
+    
+    //required to decide where to move units to start fighting:
+    //the side of the 1st fighter or the side of the 2nd one
+    BOOL _shouldFightOnFirstTrooperSide;
     
     CGPoint _touchPos;
     
     //CCSpriteBatchNode *_troopsBatch;
     CCLayer *_troopsBatch;
+    
+    GameType _gameType;
+    //a tower to capture in 'capture the base' game mode
+    Tower *_towerToCapture;
     
     int _ownershipId;
     

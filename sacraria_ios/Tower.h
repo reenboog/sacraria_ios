@@ -19,7 +19,7 @@ using namespace std;
     int _group;
     int _owner;
     int _shieldLevel;
-    int respawnSpeed;
+    //int _respawnSpeed;
 
     TowerType _type;
     NatureType _nature;
@@ -32,6 +32,8 @@ using namespace std;
     CCLabelTTF *label;
     CCLabelTTF *unitsLabel;
     CCLabelTTF *typeLabel;
+    
+    BOOL _canSpawnUnits;
     
     id<GameDelegate> _gameLayer;
 }

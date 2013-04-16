@@ -11,8 +11,14 @@
 
 @interface Troop ()
 
-- (void) done;
-//- (void) onControlTowerReached: (Tower *) tower;
+- (void) doneWithTower: (Tower *) tower;
+
+- (void) die;
+- (void) fight: (Troop *) troop;
+- (void) onFightFinished;
+- (void) applyDamageFromTroop: (Troop *) troop;
+
+- (CCMoveTo *) actionFromPoint: (CGPoint) src toPoint: (CGPoint) dst;
 
 @end
 
@@ -81,6 +87,7 @@
      NSMutableArray *actions = [NSMutableArray array];
     
     __block Troop *bself = self;
+    Tower *dstTower = nil;
     
     //TODO:r
     _spr.opacity = 0;
@@ -95,25 +102,39 @@
         for(int j = 0; j < roadPoints.size(); ++j) {
             CGPoint checkPoint = roadPoints[j];
             
-            float distance = 0;
+//            float distance = 0;
+//            
+//            distance = ccpDistance(startPoint, checkPoint);
             
-            distance = ccpDistance(startPoint, checkPoint);
+//            CCCallBlock *scaleXBlock = [CCCallBlock actionWithBlock:^{
+//                if(checkPoint.x > startPoint.x) {
+//                    _spr.scaleX = 1;
+//                } else if(checkPoint.x < startPoint.x) {
+//                    _spr.scaleX = -1;
+//                }
+//            }];
             
-            startPoint = checkPoint;
             
-            float time = distance / SpeedForUnitTypeOfNature(_type, _nature);
+            //float time = distance / SpeedForUnitTypeOfNature(_type, _nature);
 
             CCMoveTo *move = nil;
-            
+                        
             if(i == 0 && j == 0) {
                 move = [CCSequence actions:
-                                        [CCMoveTo actionWithDuration: time position: checkPoint],
+//                                        scaleXBlock,
+//                                        [CCMoveTo actionWithDuration: time position: checkPoint],
+                                        [self actionFromPoint: startPoint toPoint: checkPoint],
                                         [CCCallBlock actionWithBlock: ^{
                                             [_spr runAction: [CCFadeIn actionWithDuration: 0.3]];
                                         }], nil];
             } else {
-                move = [CCMoveTo actionWithDuration: time position: checkPoint];
+                move = [CCSequence actions:
+//                                        scaleXBlock,
+//                                        [CCMoveTo actionWithDuration: time position: checkPoint], nil];
+                                        [self actionFromPoint: startPoint toPoint: checkPoint], nil];
             }
+            
+            startPoint = checkPoint;
             
             CCCallBlock *clearCheckPoint = [CCCallBlock actionWithBlock: ^{
                 //popfront the segment point
@@ -131,37 +152,41 @@
                                                         if(tower.group == self.group) {
                                                             _path.erase(_path.begin());
                                                         } else {
-                                                            [tower applyUnits: self.numOfUnits
-                                                                       ofType: self.type
-                                                                        group: self.group
-                                                                       nature: self.nature
-                                                                    fromOwner: self.owner];
-                                                            
-                                                            [bself done];
+                                                            [bself doneWithTower: tower];
                                                         }
                                                     }], nil];
         [actions addObject: roadAction];
     }
     
-     [self runAction:
+    dstTower = _path[_path.size() - 1].second;
+    
+    [self runAction:
                     [CCSequence actions:
                                     [CCDelayTime actionWithDuration: delay],
                                     [CCCallBlock actionWithBlock: ^{
                                         _state = TS_Walking;
                                     }],
                                     [CCSequence actionWithArray: actions],
-                                    [CCCallFunc actionWithTarget: self selector: @selector(done)],
+                                    [CCCallFuncO actionWithTarget: self selector: @selector(doneWithTower:) object: dstTower],
                                     nil]];
 
 }
 
 //- (void) clear
 
-- (void) done {
+- (void) doneWithTower: (Tower *) tower {
     
     __block Troop *bself = self;
 
     _state = TS_ReadyToCleanUp;
+    
+    //apply units
+    
+    [tower applyUnits: self.numOfUnits
+               ofType: self.type
+                group: self.group
+               nature: self.nature
+            fromOwner: self.owner];
     
     [_spr runAction:
                     [CCSequence actions:
@@ -170,10 +195,6 @@
                                             [bself removeFromParentAndCleanup: YES];
                                         }], nil]
      ];
-}
-
-- (void) onTowerReached: (Tower *) tower {
-    //todo
 }
 
 - (void) fade {
@@ -190,6 +211,127 @@
 
 - (void) update: (ccTime) dt {
     
+}
+
+#pragma mark - fight logic
+
+- (void) die {
+    _state = TS_Dying;
+
+    __block Troop *bself = self;
+    [bself runAction:
+                    [CCSequence actions:
+                            //play death animation
+                            //notify the enemy nower
+                            [CCCallBlock actionWithBlock:^{
+                                [self removeFromParentAndCleanup: YES];
+                            }], nil]];
+}
+
+- (void) fight: (Troop *) troop {
+    if(_state != TS_Fighting) {
+        _state = TS_Fighting;
+    }
+    
+    //NSString *animationName = AttackAnimationNameForUnitType(self.type, self.nature);
+    
+    //play animation
+    [_spr runAction:
+            [CCSequence actions:
+                        [CCBlink actionWithDuration: 1 blinks: 3],
+                        [CCCallFuncO actionWithTarget: troop selector: @selector(applyDamageFromTroop:) object: self],
+                        [CCDelayTime actionWithDuration: FightDelayForTroopTypeAndNature(self.type, self.nature)],
+                        [CCCallFuncO actionWithTarget: self selector: @selector(fight:) object: troop], nil]];
+}
+
+- (void) onFightFinished {
+    _state = TS_Walking;
+    [self go];
+}
+
+- (void) applyDamageFromTroop: (Troop *) troop {
+    
+    float attackPower = AttackPowerForUnitAndUnit(troop.type, self.type);
+    
+    _numOfUnits -= attackPower;
+    
+    if(_numOfUnits <= 0) {
+        //one is the looser
+        [self die];
+        //the winner continues his path
+        [troop onFightFinished];
+    }
+}
+
+- (void) attackTroop: (Troop *) troop {
+    
+    [self stopAllActions];
+
+    _state = TS_GoingToFight;
+    
+    CGPoint delta;
+    delta = ccpSub(troop.position, self.position);
+    delta = ccpNormalize(delta);
+    delta = ccpMult(delta, kTroopFightMinimalDistance);
+    
+    CCCallBlock *turnToAnEnemyBlock = [CCCallBlock actionWithBlock:^{
+        if(self.position.x > troop.position.x) {
+            self.scaleX = -1;
+        } else {
+            self.scaleX = 1;
+        }
+    }];
+    
+    if(troop.state == TS_Walking) {
+        
+        [troop attackTroop: self];
+        
+        CGSize troopSize = SizeForTroopTypeAndNature(troop.type, troop.nature);
+        CGSize mySize = SizeForTroopTypeAndNature(self.type, self.nature);
+        
+        delta = ccpAdd(delta, ccp(mySize.height / 2.0 + troopSize.height / 2.0, ccpSub(troop.position, self.position).y));
+
+        [self runAction:
+                        [CCSequence actions:
+                                            [self actionFromPoint: self.position toPoint: ccpAdd(self.position, delta)],
+                                            turnToAnEnemyBlock,
+                                            [CCCallFuncO actionWithTarget: troop selector: @selector(fight:) object: self],
+                                            [CCCallFuncO actionWithTarget: self selector: @selector(fight:) object: troop],nil]
+        ];
+    } else {
+        [self runAction:
+                    [CCSequence actions:
+                                    [self actionFromPoint: self.position toPoint: ccpAdd(self.position, ccpMult(delta, -1))],
+                                    turnToAnEnemyBlock, nil]
+        ];
+    }
+}
+
+- (CCMoveTo *) actionFromPoint: (CGPoint) src toPoint: (CGPoint) dst {
+    //reset sprite
+    //run walk animation
+    float distance = ccpDistance(src, dst);
+    
+    float time = distance / SpeedForUnitTypeOfNature(_type, _nature);
+    //should we apply scaling to a sprite instead?
+    
+    CCCallBlock *scaleXBlock = [CCCallBlock actionWithBlock:^{
+        if(dst.x > src.x) {
+            self.scaleX = 1;
+        } else if(dst.x < src.x) {
+            self.scaleX = -1;
+        }
+    }];
+
+    return [CCSequence actions:
+                scaleXBlock,
+                [CCMoveTo actionWithDuration: time position: dst], nil];
+}
+
+- (void) moveToPoint: (CGPoint) pt {
+    [self runAction:
+                    [self actionFromPoint: self.position toPoint: pt]
+    ];
 }
 
 @end

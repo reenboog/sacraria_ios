@@ -26,13 +26,17 @@
 
 #pragma mark - HelloWorldLayer
 
+@interface  GameLayer ()
+
+- (void) onGameOver;
+- (Road) roadBetweenTower: (Tower *) src andTower: (Tower *) dst;
+- (void) sendUnitsFromTower: (Tower *) src toTower: (Tower *) dst;
+- (void) checkIfAnyoneWantsToFight;
+
+
+@end
+
 @implementation GameLayer
-
-- (void) test {
-
-        
-        //[ar addObject: hashedStr];
-}
 
 +(CCScene *) scene {
 	// 'scene' is an autorelease object.
@@ -58,6 +62,8 @@
 	if((self = [super init])) {
         self.isTouchEnabled = YES;
         
+        _towerToCapture = nil;
+        
         _map = [CCTMXTiledMap tiledMapWithTMXFile: @"tile.tmx"];
         
         [self addChild: _map];
@@ -68,6 +74,17 @@
         CCTMXObjectGroup *roadsGroup = [_map objectGroupNamed: @"roads"];
         NSMutableArray *roadsObjects = [roadsGroup objects];
         NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString: @", "];
+        
+        _gameType = GT_KillAll;
+        
+        NSString *gameTypeStr = [_map.properties objectForKey: @"gameType"];
+        if(gameTypeStr) {
+            if([gameTypeStr isEqualToString: @"kilAll"]) {
+                _gameType = GT_KillAll;
+            } else if([gameTypeStr isEqualToString: @"captureBase"]) {
+                _gameType = GT_CaptureBase;
+            }
+        }
         
         IntPairsVector roadLinks;
 
@@ -134,6 +151,10 @@
             
             for(id neighbour in neighbourArray) {
                 towerNeighbourDescriptors[towerIndex].push_back([neighbour intValue]);
+            }
+            
+            if([object valueForKey: @"isTowerToCapture"]) {
+                _towerToCapture = tower;
             }
             
             //CCLOG(@"name: %@", name);
@@ -206,6 +227,66 @@
             }
         }
     }
+    
+    [self checkIfAnyoneWantsToFight];
+}
+
+- (void) checkIfGameOver {
+    switch (_gameType) {
+        case GT_CaptureBase:
+            if(_towerToCapture.owner != kOwnerNoOne) {
+                [self onGameOver];
+            }
+            break;
+        case GT_KillAll:
+            //just check whether all the towers have the same group
+            for(TowerList::iterator it = _towers.begin(); it != _towers.end(); ++it) {
+                if((*it).group != _towers[0].group) {
+                    break;
+                }
+            }
+            [self onGameOver];
+    }
+}
+
+- (void) checkIfAnyoneWantsToFight {
+    
+    static int i1 = 0;
+    
+    if(i1 > 0) {
+        return;
+    }
+    
+    CCArray *troops = _troopsBatch.children;
+    int troopsCount = troops.count;
+    
+    for(int i = 0; i < troopsCount; ++i) {
+        for(int j = 0; j < troopsCount; ++j) {
+            
+            Troop *leftTroop = [troops objectAtIndex: i];
+            Troop *rightTroop = [troops objectAtIndex: j];
+            if(leftTroop == rightTroop) {
+                continue;
+            }
+            
+            if(leftTroop.state == TS_Walking && rightTroop.state == TS_Walking && leftTroop.group != rightTroop.group &&
+               ccpDistance(leftTroop.position, rightTroop.position) < kFightMinimalDistance) {
+                //start fighting
+                if(_shouldFightOnFirstTrooperSide) {
+                    [leftTroop attackTroop: rightTroop];
+                } else {
+                    [rightTroop attackTroop: leftTroop];
+                }
+                i1++;
+                //change the initial fighetr side
+                _shouldFightOnFirstTrooperSide = !_shouldFightOnFirstTrooperSide;
+            }
+        }
+    }
+}
+
+- (void) onGameOver {
+    CCLOG(@"GameOver");
 }
 
 #pragma mark - Game Delegate

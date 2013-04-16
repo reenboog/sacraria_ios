@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="1" height="1" tilewidth="1024" tileheight="768">
+ <properties>
+  <property name="gameType" value="killAll"/>
+ </properties>
  <tileset firstgid="1" name="map0" tilewidth="1024" tileheight="768">
   <image source="map0.png" width="1024" height="768"/>
  </tileset>

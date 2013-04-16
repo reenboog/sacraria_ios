@@ -62,4 +62,7 @@
 - (void) fade;
 - (void) unfade;
 
+- (void) attackTroop: (Troop *) troop;
+- (void) moveToPoint: (CGPoint) pt;
+
 @end

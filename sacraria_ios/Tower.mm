@@ -12,6 +12,8 @@
 
 @property (nonatomic, readonly) TowerList neighbours;
 @property (nonatomic, readwrite) int numOfUnits;
+@property (nonatomic, readwrite) int owner;
+//@property (nonatomic, setter = setGroup:) int group;
 @end
 
 TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerList excludedTowers) {
@@ -88,6 +90,9 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
 
 - (Tower *) init {
     if((self = [super init])) {
+        //
+        _canSpawnUnits = YES;
+        //
         
         //TODO:replace this random with valid initWith...
         _numOfUnits = random() % 10;
@@ -132,7 +137,7 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
               group: (int) attackerGroup
              nature: (NatureType) attackerNature
           fromOwner: (int) owner {
-    int groupMultiplier = (_group == attackerGroup);
+    int groupMultiplier = (_group == attackerGroup ? 1 : -1);
     
     //all the balance goes here
     //get the nature multiplier first
@@ -147,7 +152,7 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
         _numOfUnits *= -1;
         
         _owner = owner;
-        _group = attackerGroup;
+        [self setGroup: attackerGroup];
         //
         {
             //should we keep the previous nature?
@@ -159,7 +164,16 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
             //so, we should recalculate the respawn speed
         }
         //apply new changes visually
+        self.numOfUnits = _numOfUnits;
+        [_gameLayer checkIfGameOver];
+        
+        //revive this tower in case it had no any owner
+        if(!_canSpawnUnits) {
+            _canSpawnUnits = YES;
+        }
     }
+    
+    self.numOfUnits = _numOfUnits;
 }
 
 - (TowerList) pathToTower: (Tower *) tower {
@@ -203,8 +217,9 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
 }
 
 - (void) spawnUnits: (ccTime) dt {
-    
-    self.numOfUnits = _numOfUnits + 1;
+    if(_canSpawnUnits) {
+        self.numOfUnits = _numOfUnits + 1;
+    }
 }
 
 - (void) setNumOfUnits: (int) numOfUnits {

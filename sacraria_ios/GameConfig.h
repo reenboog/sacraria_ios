@@ -38,6 +38,11 @@ using namespace std;
 #define kTowerInvalidGroup                  -93721
 #define kOwnerNoOne                         -24343
 
+#define kFightMinimalDistance               10
+#define kTroopFightMinimalDistance          100
+
+#define ccSize(w, h) (CGSizeMake(w, h))
+
 typedef enum {
     GS_idle,
 
@@ -70,16 +75,26 @@ typedef enum {
     UT_big,
     UT_fast,
     UT_magic,
-    UT_super
+    UT_super,
+    
+    //separate unit types
     
 } UnitType;
 
 typedef enum {
     TS_Idle,
     TS_Walking,
+    TS_GoingToFight,
     TS_Fighting,
+    TS_Dying,
+    TS_WonTheFight,
     TS_ReadyToCleanUp
 } TroopState;
+
+typedef enum {
+    GT_KillAll,
+    GT_CaptureBase
+}GameType;
 
 typedef list<int> IntList;
 typedef vector<int> IntVector;
@@ -111,10 +126,15 @@ extern "C" {
 
 float MultiplierForNatures(NatureType attacker, NatureType defender);
 float MultiplierForTowerAndUnit(TowerType tower, UnitType unit);
+float AttackPowerForUnitAndUnit(UnitType attacker, UnitType defender);
 
 int TroopSizeForUnitType(UnitType type, NatureType nature);
 int HealthForUnitTypeOfNature(UnitType type, NatureType nature);
 float SpeedForUnitTypeOfNature(UnitType type, NatureType nature);
+float RespawnTimeForTowerTypeOfNature(UnitType type, NatureType nature);
+CGSize SizeForTroopTypeAndNature(UnitType type, NatureType nature);
+float FightDelayForTroopTypeAndNature(UnitType type, NatureType nature);
+NSString * AttackAnimationNameForUnitType(UnitType type, NatureType nature);
     
 #ifdef __cplusplus
 }
@@ -124,7 +144,8 @@ float SpeedForUnitTypeOfNature(UnitType type, NatureType nature);
 
 @protocol GameDelegate <NSObject>
 
-- (void) sendUnitsFromTower: (Tower *) src toTower: (Tower *) dst;
+//- (void) sendUnitsFromTower: (Tower *) src toTower: (Tower *) dst;
+- (void) checkIfGameOver;
 
 @end
 
