@@ -97,7 +97,7 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
         //TODO:replace this random with valid initWith...
         _numOfUnits = random() % 10;
         //debug only
-        _spr = [CCSprite spriteWithFile: @"Icon.png"];
+        _spr = [CCSprite spriteWithFile: @"tower0.png"];
         [self addChild: _spr];
         
         label = [CCLabelTTF labelWithString: @"" fontName: @"Arial" fontSize: 20];
@@ -207,12 +207,12 @@ TowerList GetPathFromTowerToTower(Tower *from, Tower *to, TowerList path, TowerL
 }
 //
 
-- (void) setGroup:(int)group {
+- (void) setGroup: (int)group {
     _group = group;
     switch(group) {
-        case 0: _spr.color = ccc3(255, 0, 0); break;
-        case 1: _spr.color = ccc3(0, 255, 0); break;
-        case 2: _spr.color = ccc3(255, 0, 255); break;
+        case 0: _spr.color = ccc3(255, 200, 200); break;
+        case 1: _spr.color = ccc3(200, 255, 200); break;
+        case 2: _spr.color = ccc3(200, 200, 255); break;
     }
 }
 

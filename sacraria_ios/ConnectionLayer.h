@@ -6,6 +6,15 @@
 //  Copyright (c) 2013 spotGames. All rights reserved.
 //
 
+@interface UpdateManager : NSObject {
+    //
+}
+
++ (void) checkStatus;
++ (void) updateAssets;
+
+@end
+
 #import "cocos2d.h"
 
 @interface ConnectionLayer : CCLayer {

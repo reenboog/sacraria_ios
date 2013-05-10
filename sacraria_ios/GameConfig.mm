@@ -1,6 +1,7 @@
 
 #import "GameConfig.h"
 #import "cocos2d.h"
+#import "Settings.h"
 
 float MultiplierForNatures(NatureType attacker, NatureType defender) {
     return 1.0;
@@ -99,9 +100,9 @@ float FightDelayForTroopTypeAndNature(UnitType type, NatureType nature) {
 }
 
 int RandomDistanceForFight() {
-    const int numOfDistances = 3;
+    const int numOfDistances = 9;
     static int distances[numOfDistances] = {
-      30, 40, 50
+      10, 15, 20, 25, 30, 35, 40, 45, 50
     };
     
     static int counter = 0;
@@ -113,10 +114,11 @@ int RandomDistanceForFight() {
     
     counter++;
     
-//    //3 calls for 2 gith pairs
-//    if(counter > 6) {
-//        counter = 0;
-//    }
+    //3 calls for 2 gith pairs
+    if(counter > numOfDistances * 2) {
+        counter = 0;
+        distance = distances[counter];
+    }
     
     return distance;
 }
@@ -202,7 +204,7 @@ NSString * AttackAnimationNameForUnitType(UnitType type, NatureType nature) {
 @implementation GameConfig
 
 @synthesize gameState = _gameState;
-//@synthesize apiBaseUrl = _apiBaseUrl;
+@synthesize host = _host;
 
 + (GameConfig *) sharedConfig {
     static GameConfig *sharedConfig = nil;
@@ -216,7 +218,7 @@ NSString * AttackAnimationNameForUnitType(UnitType type, NatureType nature) {
 }
 
 - (void) dealloc {
-    //self.apiBaseUrl = nil;
+    [_host release];
     
     [super dealloc];
 }
@@ -228,6 +230,21 @@ NSString * AttackAnimationNameForUnitType(UnitType type, NatureType nature) {
     }
     
     return self;
+}
+
+- (NSString *) pickUpAHost {
+    int hostsCount = [[Settings sharedSettings].appHosts count];
+    
+    if(_host) {
+        _currentHostIndex = rand() % hostsCount;
+    } else {
+        _currentHostIndex++;
+        _currentHostIndex = _currentHostIndex % hostsCount;
+    }
+    
+    _host = [[Settings sharedSettings].appHosts objectAtIndex: _currentHostIndex];
+    
+    return _host;
 }
 
 @end

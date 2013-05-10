@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="70" tileheight="70">
+ <properties>
+  <property name="gameType" value="kilAll"/>
+  <property name="obstaclesFile" value="stoneObjects"/>
+ </properties>
+ <tileset firstgid="1" name="stoneTiles" tilewidth="70" tileheight="70" spacing="2">
+  <image source="stoneTiles.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="50" name="stoneObjects" tilewidth="161" tileheight="194" spacing="2">
+  <image source="stoneObjects.png" width="512" height="512"/>
+  <tile id="0">
+   <properties>
+    <property name="frame" value="tree.png"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="frame" value="hill1.png"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="frame" value="hill0.png"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="frame" value="hill2.png"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="back" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJyFVFuSgkAMDGIJuAjlA3d/lJ+t/VHu4FE8yhyFo3C0zThp6cpStR9d4wTT6XQCvcj4ISJrRS/ybPQE9D55xHimiDmfC+gdH+chV+9SGhD/VpwXwHwlwWvq57i4HjzefBfFUTH8w834UhyUQ8+xcXw7Ra34MZ674/U9N4lLisQ7mTdj9OJm+a0iFwlH0+r1Zo73kBC1j+DjPqFxY3WLBX5GvsDXprxHzANnZagTAp+F/Y7Pr/Nc3nw7ygXnheprvaD3h2Ky2gGah7/zHjs9T9Rrnv7/0rGhGmXKn5RnQn3Mjvkw37vzj/tjTtYOPtqtF9/WNGbkX+yP+ANyW+cfuDral7PtDGr7GfKcc9KbGbqkKcC/venj2n5vEPfeRb6oabWgr6XavDdVugf2jvdyME7sDd4tfufQB7SXc72J69TEzfvi5wZPtI8Ab/nZSeZ3FJ747wFqxrnhm7l2c79abzcXr9y+7F1v8HhL8cyhc3Gex8rp4bkhjnz4Gv1gLb9jsUmQ
+  </data>
+ </layer>
+ <objectgroup name="obstacles" width="20" height="20">
+  <object gid="50" x="527" y="870"/>
+  <object gid="50" x="481" y="795"/>
+  <object gid="50" x="408" y="874"/>
+  <object gid="52" x="232" y="1451"/>
+  <object gid="51" x="488" y="1273"/>
+  <object gid="53" x="644" y="1461"/>
+  <object gid="53" x="719" y="1433"/>
+  <object gid="53" x="791" y="1468"/>
+  <object gid="50" x="1275" y="390"/>
+  <object gid="50" x="1277" y="501"/>
+  <object gid="50" x="1267" y="665"/>
+  <object gid="51" x="1180" y="754"/>
+  <object gid="51" x="1141" y="715"/>
+  <object gid="51" x="1129" y="699"/>
+  <object gid="51" x="1115" y="652"/>
+  <object gid="51" x="1076" y="619"/>
+  <object gid="53" x="991" y="490"/>
+  <object gid="53" x="946" y="458"/>
+  <object gid="52" x="878" y="437"/>
+  <object gid="52" x="813" y="378"/>
+  <object gid="53" x="755" y="346"/>
+  <object gid="53" x="548" y="309"/>
+  <object gid="53" x="590" y="338"/>
+  <object gid="53" x="665" y="351"/>
+  <object gid="51" x="925" y="242"/>
+  <object gid="51" x="1058" y="261"/>
+  <object gid="51" x="987" y="239"/>
+  <object gid="51" x="1228" y="794"/>
+  <object gid="51" x="1286" y="798"/>
+  <object gid="51" x="1162" y="715"/>
+  <object gid="53" x="1166" y="723"/>
+  <object gid="50" x="752" y="239"/>
+  <object gid="50" x="665" y="242"/>
+  <object gid="50" x="1010" y="391"/>
+  <object gid="50" x="1130" y="555"/>
+  <object gid="50" x="487" y="203"/>
+  <object gid="50" x="329" y="219"/>
+  <object gid="53" x="141" y="223"/>
+  <object gid="53" x="208" y="172"/>
+  <object gid="52" x="273" y="208"/>
+  <object gid="52" x="394" y="283"/>
+  <object gid="52" x="343" y="159"/>
+  <object gid="52" x="160" y="107"/>
+  <object gid="52" x="237" y="108"/>
+  <object gid="52" x="328" y="106"/>
+  <object gid="52" x="280" y="103"/>
+  <object gid="53" x="197" y="113"/>
+  <object gid="53" x="397" y="113"/>
+  <object gid="53" x="456" y="111"/>
+  <object gid="53" x="415" y="194"/>
+  <object gid="50" x="58" y="443"/>
+  <object gid="53" x="877" y="211"/>
+  <object gid="53" x="843" y="150"/>
+  <object gid="53" x="799" y="124"/>
+  <object gid="53" x="746" y="105"/>
+  <object gid="53" x="876" y="106"/>
+  <object gid="50" x="1048" y="213"/>
+  <object gid="50" x="988" y="197"/>
+  <object gid="50" x="907" y="178"/>
+  <object gid="50" x="979" y="272"/>
+  <object gid="50" x="679" y="390"/>
+  <object gid="51" x="1177" y="449"/>
+  <object gid="50" x="1211" y="1479"/>
+  <object gid="50" x="1308" y="1435"/>
+  <object gid="50" x="1192" y="1412"/>
+  <object gid="50" x="1088" y="1514"/>
+  <object gid="50" x="1019" y="1478"/>
+  <object gid="50" x="967" y="1488"/>
+  <object gid="50" x="1255" y="1479"/>
+  <object gid="50" x="1213" y="1381"/>
+  <object gid="50" x="1254" y="1385"/>
+  <object gid="50" x="1128" y="1371"/>
+  <object gid="50" x="949" y="1394"/>
+  <object gid="50" x="1026" y="1340"/>
+  <object gid="52" x="1147" y="1483"/>
+  <object gid="52" x="1087" y="1487"/>
+  <object gid="52" x="1054" y="1459"/>
+  <object gid="52" x="1174" y="1422"/>
+  <object gid="52" x="1214" y="1477"/>
+  <object gid="52" x="1199" y="1487"/>
+  <object gid="52" x="1279" y="1476"/>
+  <object gid="52" x="1035" y="1481"/>
+  <object gid="52" x="905" y="1479"/>
+  <object gid="52" x="866" y="1524"/>
+ </objectgroup>
+ <objectgroup name="towers" width="20" height="20">
+  <object name="0" x="285" y="292">
+   <properties>
+    <property name="neighbours" value="1,2,5"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="1" x="148" y="540">
+   <properties>
+    <property name="neighbours" value="0,2,5"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="2" x="767" y="559">
+   <properties>
+    <property name="neighbours" value="0,1,5,4,3"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="3" x="1248" y="281">
+   <properties>
+    <property name="neighbours" value="2,4"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="4" x="1046" y="776">
+   <properties>
+    <property name="neighbours" value="2,5,3,9"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="5" x="703" y="959">
+   <properties>
+    <property name="neighbours" value="6,9,4,1,2,5"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="6" x="280" y="1198">
+   <properties>
+    <property name="neighbours" value="5"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="7" x="830" y="1194">
+   <properties>
+    <property name="neighbours" value="9"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="8" x="1326" y="1163">
+   <properties>
+    <property name="neighbours" value="9"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object name="9" x="1061" y="1050">
+   <properties>
+    <property name="neighbours" value="7,8,5,4"/>
+   </properties>
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup name="roads" width="20" height="20">
+  <object x="305" y="288">
+   <properties>
+    <property name="dstTower" value="1"/>
+    <property name="srcTower" value="0"/>
+   </properties>
+   <polyline points="0,0 25,-4 50,15 54,57 44,115 54,127 89,139 119,189 154,202 217,194 294,188 324,208 341,231 326,284 300,332 302,349 264,356 212,354 166,373 116,419 81,422 49,411 38,368 -12,339 -18,283 -40,269 -110,280 -152,257"/>
+  </object>
+  <object x="311" y="294">
+   <properties>
+    <property name="dstTower" value="2"/>
+    <property name="srcTower" value="0"/>
+   </properties>
+   <polyline points="0,0 38,21 50,126 112,173 154,171 191,156 238,151 294,195 327,206 364,196 431,197 470,211 460,258"/>
+  </object>
+  <object x="163" y="539">
+   <properties>
+    <property name="dstTower" value="2"/>
+    <property name="srcTower" value="1"/>
+   </properties>
+   <polyline points="0,0 85,31 116,58 121,96 163,88 201,152 238,187 316,154 330,92 413,107 450,116 465,104 468,67 459,50 455,14 488,-43 562,-53 591,-23 601,17"/>
+  </object>
+  <object x="161" y="545">
+   <properties>
+    <property name="dstTower" value="5"/>
+    <property name="srcTower" value="1"/>
+   </properties>
+   <polyline points="0,0 39,-13 87,28 115,64 161,101 189,102 210,157 240,167 301,138 321,88 372,79 470,96 517,171 510,198 510,209 524,222 552,270 569,312 578,358 573,395 546,414"/>
+  </object>
+  <object x="769" y="538">
+   <properties>
+    <property name="dstTower" value="5"/>
+    <property name="srcTower" value="2"/>
+   </properties>
+   <polyline points="0,0 -20,-35 -55,-37 -102,-48 -155,8 -143,29 -134,95 -129,153 -119,164 -102,184 -77,195 -64,212 -59,237 -60,268 -70,295 -66,327 -59,355 -64,414"/>
+  </object>
+  <object x="778" y="555">
+   <properties>
+    <property name="dstTower" value="3"/>
+    <property name="srcTower" value="2"/>
+   </properties>
+   <polyline points="0,0 -7,-39 -3,-45 17,-56 46,-60 76,-60 102,-55 125,-46 139,-35 157,-32 177,-28 208,-29 248,-63 306,-58 369,-63 406,-101 423,-125 414,-187 416,-237 428,-259 459,-271"/>
+  </object>
+  <object x="761" y="556">
+   <properties>
+    <property name="dstTower" value="4"/>
+    <property name="srcTower" value="2"/>
+   </properties>
+   <polyline points="0,0 3,-30 17,-60 62,-67 145,-62 188,24 216,67 252,79 322,81 357,97 366,139 358,180 341,208 288,220"/>
+  </object>
+  <object x="1229" y="293">
+   <properties>
+    <property name="dstTower" value="4"/>
+    <property name="srcTower" value="3"/>
+   </properties>
+   <polyline points="0,0 -28,37 -40,82 -42,165 -87,191 -156,206 -236,212 -263,232 -274,270 -274,298 -251,336 -199,344 -149,335 -103,379 -113,463 -129,484 -183,482"/>
+  </object>
+  <object x="1024" y="779">
+   <properties>
+    <property name="dstTower" value="5"/>
+    <property name="srcTower" value="4"/>
+   </properties>
+   <polyline points="0,0 -32,1 -44,38 -41,92 -65,127 -148,137 -205,139 -252,140 -304,178"/>
+  </object>
+  <object x="1033" y="780">
+   <properties>
+    <property name="dstTower" value="9"/>
+    <property name="srcTower" value="4"/>
+   </properties>
+   <polyline points="0,0 -42,18 -56,59 -58,98 -51,124 -25,135 -7,133 15,136 15,167 8,208 25,264"/>
+  </object>
+  <object x="689" y="960">
+   <properties>
+    <property name="dstTower" value="6"/>
+    <property name="srcTower" value="5"/>
+   </properties>
+   <polyline points="0,0 -33,9 -66,12 -102,18 -132,-3 -146,-37 -186,-43 -242,-46 -311,-42 -342,-11 -346,27 -344,69 -333,92 -294,103 -271,154 -275,200 -288,222 -335,236 -403,238"/>
+  </object>
+  <object x="711" y="970">
+   <properties>
+    <property name="dstTower" value="9"/>
+    <property name="srcTower" value="5"/>
+   </properties>
+   <polyline points="0,0 20,2 41,-3 67,-34 119,-64 189,-64 268,-51 332,-35 342,17 330,61 341,79"/>
+  </object>
+  <object x="841" y="1196">
+   <properties>
+    <property name="dstTower" value="9"/>
+    <property name="srcTower" value="7"/>
+   </properties>
+   <polyline points="0,0 36,-1 76,-25 76,-62 63,-94 61,-126 84,-145 147,-146 175,-141 209,-144"/>
+  </object>
+  <object x="1078" y="1055">
+   <properties>
+    <property name="dstTower" value="8"/>
+    <property name="srcTower" value="9"/>
+   </properties>
+   <polyline points="0,0 55,-2 118,-2 179,11 196,65 204,107 227,116 242,113"/>
+  </object>
+  <object x="320" y="294">
+   <properties>
+    <property name="dstTower" value="5"/>
+    <property name="srcTower" value="0"/>
+   </properties>
+   <polyline points="0,0 34,58 39,119 75,134 105,185 139,196 220,200 303,179 322,200 304,249 299,307 306,334 317,375 328,433 358,455 381,479 370,519 366,549 394,575 403,607 388,658"/>
+  </object>
+ </objectgroup>
+</map>

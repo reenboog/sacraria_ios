@@ -33,10 +33,14 @@
     //the side of the 1st fighter or the side of the 2nd one
     BOOL _shouldFightOnFirstTrooperSide;
     
-    CGPoint _touchPos;
+//    CGPoint _touchPos;
+//    CGPoint _lastTouchPos;
     
     //CCSpriteBatchNode *_troopsBatch;
     CCLayer *_troopsBatch;
+    CCSpriteBatchNode *_obstacles;
+    
+    int _numOfActiveTouches;
     
     GameType _gameType;
     //a tower to capture in 'capture the base' game mode
@@ -45,7 +49,7 @@
     int _ownershipId;
     
     //debug stuff
-    RoadsLayer *roadsLayer;
+    RoadsLayer *roadsLayer;    
 }
 
 // returns a CCScene that contains the HelloWorldLayer as the only child

@@ -8,8 +8,19 @@
 
 using namespace std;
 
+#define kVersion 0
+#define kDefaultAssetPackageId 0
+
+#define kUpdateRequired 204
+#define kNewAssetsRequired 206
+#define kNormalServerStatus 200
+
+#define kScreenWidth 1024
+#define kScreenHeight 768
+
 #define zTower      2000
 #define zTroop      2001
+#define zObstacles  2001
 
 #define kGameSessionRefreshPeriod           5
 #define kMaxNumOfReconnections              5
@@ -22,6 +33,9 @@ using namespace std;
 //#define kFailedToConnectNotification        @"failedToConnectNotification"
 
 #define kNetworkConnectionRestored          @"networkConnectionRestored"
+
+#define kOldVersionNotification             @"oldVersionNotification"
+#define kGetNewAssetsNotification           @"getNewAssetsNotification"
 
 #define kLoggedInNotification               @"loggedInNotification"
 #define kFailedToLogInNotification          @"failedToLogInNotification"
@@ -153,13 +167,16 @@ int RandomDistanceForFight();
 @interface GameConfig: NSObject {
     GameState _gameState;
     
-    //NSString *_apiBaseUrl;
+    NSString *_host;
+    int _currentHostIndex;
 }
 
 @property (nonatomic, assign) GameState gameState;
-//@property (nonatomic, retain) NSString *apiBaseUrl;
+@property (nonatomic, readonly) NSString *host;
 
 + (GameConfig *) sharedConfig;
+
+- (NSString *) pickUpAHost;
 
 @end
 

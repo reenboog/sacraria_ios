@@ -11,6 +11,8 @@
 #import "GameLayer.h"
 #import "GameConfig.h"
 
+#import "ConnectionLayer.h"
+
 #import "RoadsLayer.h"
 #import "Tower.h"
 #import "Troop.h"
@@ -38,6 +40,8 @@
 
 @implementation GameLayer
 
+BOOL CanSendData = NO;
+
 +(CCScene *) scene {
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
@@ -64,7 +68,7 @@
         
         _towerToCapture = nil;
         
-        _map = [CCTMXTiledMap tiledMapWithTMXFile: @"tile.tmx"];
+        _map = [CCTMXTiledMap tiledMapWithTMXFile: @"sd.tmx"];
         
         [self addChild: _map];
         
@@ -175,6 +179,43 @@
             _roads[i].dst = _towers[roadLinks[i].second];
         }
         
+        NSString *obstaclesFile = [_map.properties objectForKey: @"obstaclesFile"];
+        if(obstaclesFile) {
+            _obstacles = [CCSpriteBatchNode batchNodeWithFile:
+                          [NSString stringWithFormat: @"%@.png", obstaclesFile]];
+            
+            [self addChild: _obstacles z: zObstacles];
+
+            [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:
+                        [NSString stringWithFormat: @"%@.plist", obstaclesFile]];
+            
+            CCTMXObjectGroup *obstaclesGroup = [_map objectGroupNamed: @"obstacles"];
+            NSMutableArray *obstaclesObjects = [obstaclesGroup objects];
+            
+            for(id object in obstaclesObjects) {
+               
+                int gid = [[object valueForKey: @"gid"] intValue];
+                
+                NSDictionary *gidProperties = [_map propertiesForGID: gid];
+                
+                NSString *frame = [gidProperties objectForKey: @"frame"];
+                
+                int x = [[object objectForKey: @"x"] intValue];
+                int y = [[object objectForKey: @"y"] intValue];
+                
+                CCSprite *obstacle = [CCSprite spriteWithSpriteFrameName: frame];
+                obstacle.position = ccp(x, y);
+                obstacle.anchorPoint = ccp(0, 0);
+                
+                [_obstacles addChild: obstacle z: 0];
+            }
+            
+            //sort obstacles
+            for(CCNode *node in _obstacles.children) {
+                node.zOrder = 768 - node.position.y;
+            }
+        }
+        
         //TODO: apply groups ownership and so on
         
         //check path finding
@@ -196,6 +237,9 @@
         [self sendUnitsFromTower: _towers[10] toTower: _towers[0]];
         
         [self scheduleUpdate];
+                
+        [UpdateManager checkStatus];
+        //[self reconnect];
 
 	}
 	return self;
@@ -229,6 +273,19 @@
     }
     
     [self checkIfAnyoneWantsToFight];
+    
+//    if(_webSocket && CanSendData) {
+//        NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:
+//                           [NSNumber numberWithInt: spr1.position.x], @"x",
+//                           [NSNumber numberWithInt: spr1.position.y], @"y",
+//                           nil];
+//        NSError *err = nil;
+//        
+//        NSData *data = [NSJSONSerialization dataWithJSONObject: d
+//                                                       options: kNilOptions
+//                                                         error: &err];
+//        [_webSocket send: data];
+//    }
 }
 
 - (void) checkIfGameOver {
@@ -354,46 +411,77 @@
 
 #pragma mark - Touches
 
-- (void) registerWithTouchDispatcher
-{
-	[[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
+//- (void) registerWithTouchDispatcher
+//{
+//	[[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
+//}
+
+- (void) ccTouchesBegan: (NSSet *) touches withEvent: (UIEvent *) event {
+    //
+    //CCLOG(@"touches size: %i", (int)touches.count);
+    _numOfActiveTouches += touches.count;
 }
 
-- (BOOL) ccTouchBegan: (UITouch *) touch withEvent: (UIEvent *) event
-{
-    return YES;
-}
-
-- (void) ccTouchMoved: (UITouch *) touch withEvent: (UIEvent *) event
-{
-    _touchPos = [touch locationInView: [touch view]];
-    _touchPos = [[CCDirector sharedDirector] convertToGL: _touchPos];
-    _touchPos = [self convertToNodeSpace: _touchPos];
-
-    for(TowerList::iterator it = _towers.begin(); it != _towers.end(); ++it) {
-        if(ccpDistance((*it).position, _touchPos) < 100 &&
-           std::find(_selectedTowers.begin(), _selectedTowers.end(), *it) == _selectedTowers.end() &&
-           (*it).owner == _ownershipId) {
-            _selectedTowers.push_back(*it);
-            
+- (void) ccTouchesMoved: (NSSet *) touches withEvent: (UIEvent *) event {
+    
+    for(UITouch *touch in touches) {
+    
+        CGPoint touchPos = [touch locationInView: [touch view]];
+        touchPos = [[CCDirector sharedDirector] convertToGL: touchPos];
+        touchPos = [self convertToNodeSpace: touchPos];
+        
+        CGPoint prevTouchPos = [touch previousLocationInView: [touch view]];
+        prevTouchPos = [[CCDirector sharedDirector] convertToGL: prevTouchPos];
+        prevTouchPos = [self convertToNodeSpace: prevTouchPos];
+        
+        if(_numOfActiveTouches == 2) {
+            _selectedTowers.clear();
             roadsLayer.selectedTowers = _selectedTowers;
+            
+            CGPoint delta = ccpSub(touchPos, prevTouchPos);
+
+            self.position = ccpAdd(self.position, delta);
+            
+            //clamp
+            int width = kScreenWidth - (_map.mapSize.width * _map.tileSize.width);
+            int height = kScreenHeight - (_map.mapSize.height * _map.tileSize.height);;
+            
+            self.position = ccpClamp(self.position, ccp(width, height), ccp(0, 0));
+            
+        } else if(_numOfActiveTouches == 1) {
+            for(TowerList::iterator it = _towers.begin(); it != _towers.end(); ++it) {
+                if(ccpDistance((*it).position, touchPos) < 100 &&
+                   std::find(_selectedTowers.begin(), _selectedTowers.end(), *it) == _selectedTowers.end() &&
+                   (*it).owner == _ownershipId) {
+                    _selectedTowers.push_back(*it);
+                    
+                    roadsLayer.selectedTowers = _selectedTowers;
+                }
+            }
+            
+            roadsLayer.touchPos = touchPos;
+            break;
         }
     }
-    
-    roadsLayer.touchPos = _touchPos;
 }
 
-- (void) ccTouchEnded: (UITouch *) touch withEvent: (UIEvent *) event
-{
-    _touchPos = [touch locationInView: [touch view]];
-    _touchPos = [[CCDirector sharedDirector] convertToGL: _touchPos];
-    _touchPos = [self convertToNodeSpace: _touchPos];
+- (void) ccTouchesEnded: (NSSet *) touches withEvent: (UIEvent *) event {
     
-    CCLOG(@"TOUCH: %i, %i", (int)_touchPos.x, (int)_touchPos.y);
+    _numOfActiveTouches -= touches.count;
+    
+    if(_numOfActiveTouches > 0) {
+        return;
+    }
+    
+    UITouch *touch = [touches anyObject];
+
+    CGPoint touchPos = [touch locationInView: [touch view]];
+    touchPos = [[CCDirector sharedDirector] convertToGL: touchPos];
+    touchPos = [self convertToNodeSpace: touchPos];
     
     for(TowerList::iterator it = _towers.begin(); it != _towers.end(); ++it) {
-        if(ccpDistance((*it).position, _touchPos) < 100) {
-            CCLOG(@"CONTAINS!!!!!");
+        if(ccpDistance((*it).position, touchPos) < 100) {
+            //CCLOG(@"CONTAINS!!!!!");
             for(TowerList::iterator selIt = _selectedTowers.begin(); selIt != _selectedTowers.end(); ++selIt) {
                 if((*selIt) != (*it)) {
                     [self sendUnitsFromTower: (*selIt) toTower: (*it)];
@@ -417,8 +505,19 @@
     [_webSocket close];
     [_webSocket release];
     
+    //
+    
+    NSString *addr = @"ws://atmos:8080/websocket/";
+    static int i = 0;
+    
+    if(i > 0) {
+        addr =  @"ws://rainbow:8080/websocket/";
+    }
+    
+    //
+    i++;
     _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:
-                                                          [NSURL URLWithString:@"ws://localhost:8080/websocket/"]]];
+                                                          [NSURL URLWithString: addr]]];
     _webSocket.delegate = self;
     
     CCLOG(@"oppening connection");
@@ -431,9 +530,11 @@
 {
     CCLOG(@"Websocket Connected");
     
+    CanSendData = YES;
+    
     //test transmition
     //----------------------------------------------------------------------
-    [_webSocket send: @"hi"];
+    
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 }
 
@@ -443,11 +544,14 @@
     
     [_webSocket release];
     _webSocket = nil;
+    
+    CanSendData = NO;
+    [self reconnect];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message;
 {
-    CCLOG(@"Received \"%@\"", message);
+    //CCLOG(@"Received \"%@\"", message);
     //----------------------------------------------------------------------
     //parse test message
     NSError* error;
@@ -455,26 +559,23 @@
                                                          options: kNilOptions
                                                            error: &error];
     
-    NSDictionary *data = [json objectForKey: @"data"];
+    NSDictionary *data = json;
     
-    NSString *name = [data objectForKey: @"name"];
-    NSNumber *age = [data objectForKey: @"age"];
-    NSArray *nums = [data objectForKey: @"nums"];
+    int x = [[data objectForKey: @"x"] intValue];
+    int y = [[data objectForKey: @"y"] intValue];
     
-    CCLOG(@"name is %@", name);
-    CCLOG(@"age is %i", [age intValue]);
-    for(NSNumber *num in nums)
-    {
-        CCLOG(@"subnum is %i", [num intValue]);
-    }
-    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
 {
+    CanSendData = NO;
+    
     CCLOG(@"WebSocket closed");
     [_webSocket release];
     _webSocket = nil;
+    
+    ///
+    [self reconnect];
 }
 
 @end

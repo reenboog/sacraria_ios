@@ -45,7 +45,7 @@
 
 - (void) dealloc {
     
-    CCLOG(@"dealloc");
+    //CCLOG(@"troop deallocated");
     [super dealloc];
 }
 
@@ -58,6 +58,9 @@
                     path: (TowerPathVector) path {
     
     if((self = [super init])) {
+        
+        //CCLOG(@"troop allocated");
+        
         _type = type;
         _owner = owner;
         _group = group;

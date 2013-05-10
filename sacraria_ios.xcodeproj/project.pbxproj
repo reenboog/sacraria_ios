@@ -16,7 +16,12 @@
 		B8162FAE171326610032F6D5 /* Troop.mm in Sources */ = {isa = PBXBuildFile; fileRef = B8162FAD171326610032F6D5 /* Troop.mm */; };
 		B841994F1700230B0039F513 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B841994E1700230B0039F513 /* SystemConfiguration.framework */; };
 		B849EA9A16FB4C0900E8BBF9 /* AppHosts.plist in Resources */ = {isa = PBXBuildFile; fileRef = B849EA9916FB4C0900E8BBF9 /* AppHosts.plist */; };
+		B8565FB7173D10FF009731FA /* stoneObjects.png in Resources */ = {isa = PBXBuildFile; fileRef = B8565FB5173D10FF009731FA /* stoneObjects.png */; };
+		B8565FB8173D10FF009731FA /* stoneTiles.png in Resources */ = {isa = PBXBuildFile; fileRef = B8565FB6173D10FF009731FA /* stoneTiles.png */; };
+		B8565FBB173D1104009731FA /* sd.tmx in Resources */ = {isa = PBXBuildFile; fileRef = B8565FBA173D1104009731FA /* sd.tmx */; };
+		B88E06CD1738F47D006701D2 /* ConnectionLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = B88E06CC1738F47D006701D2 /* ConnectionLayer.mm */; };
 		B8947715170D66E100DD75E1 /* RoadsLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = B8947714170D66E100DD75E1 /* RoadsLayer.mm */; };
+		B89C852A17245EE500F98B3F /* tower0.png in Resources */ = {isa = PBXBuildFile; fileRef = B89C852917245EE500F98B3F /* tower0.png */; };
 		B89EC33C170C2889006F23E0 /* Tower.mm in Sources */ = {isa = PBXBuildFile; fileRef = B89EC33B170C2889006F23E0 /* Tower.mm */; };
 		B89EC33F170C4FCF006F23E0 /* map0.png in Resources */ = {isa = PBXBuildFile; fileRef = B89EC33E170C4FCF006F23E0 /* map0.png */; };
 		B89EC347170C5A13006F23E0 /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = B89EC340170C5A13006F23E0 /* base64.c */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -35,7 +40,7 @@
 		B89EC376170C5C7B006F23E0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B89EC375170C5C7B006F23E0 /* CFNetwork.framework */; };
 		B89EC378170C5C81006F23E0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B89EC377170C5C81006F23E0 /* Security.framework */; };
 		B89EC3A3170C8250006F23E0 /* tile.tmx in Resources */ = {isa = PBXBuildFile; fileRef = B89EC3A2170C8250006F23E0 /* tile.tmx */; };
-		B8A27B3316FA18BD00E3848A /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A27B3216FA18BD00E3848A /* Settings.m */; };
+		B8A27B3316FA18BD00E3848A /* Settings.mm in Sources */ = {isa = PBXBuildFile; fileRef = B8A27B3216FA18BD00E3848A /* Settings.mm */; };
 		B8A27B3616FA19E600E3848A /* GameConfig.mm in Sources */ = {isa = PBXBuildFile; fileRef = B8A27B3516FA19E600E3848A /* GameConfig.mm */; };
 		B8B1439416E7722200384377 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B1439316E7722200384377 /* QuartzCore.framework */; };
 		B8B1439616E7722200384377 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B1439516E7722200384377 /* OpenGLES.framework */; };
@@ -166,6 +171,7 @@
 		B8B1452616E7722500384377 /* vec4.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B1452516E7722500384377 /* vec4.c */; };
 		B8B1452B16E7722500384377 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B1452A16E7722500384377 /* main.m */; };
 		B8B1452E16E7722500384377 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B8B1452D16E7722500384377 /* AppDelegate.mm */; };
+		B8FEEE00173D457C00E54FAF /* stoneObjects.plist in Resources */ = {isa = PBXBuildFile; fileRef = B8FEEDFF173D457C00E54FAF /* stoneObjects.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -180,8 +186,14 @@
 		B8162FAD171326610032F6D5 /* Troop.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Troop.mm; sourceTree = "<group>"; };
 		B841994E1700230B0039F513 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B849EA9916FB4C0900E8BBF9 /* AppHosts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppHosts.plist; sourceTree = "<group>"; };
+		B8565FB5173D10FF009731FA /* stoneObjects.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stoneObjects.png; sourceTree = "<group>"; };
+		B8565FB6173D10FF009731FA /* stoneTiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stoneTiles.png; sourceTree = "<group>"; };
+		B8565FBA173D1104009731FA /* sd.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sd.tmx; sourceTree = "<group>"; };
+		B88E06CB1738F47D006701D2 /* ConnectionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionLayer.h; sourceTree = "<group>"; };
+		B88E06CC1738F47D006701D2 /* ConnectionLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ConnectionLayer.mm; sourceTree = "<group>"; };
 		B8947713170D66E100DD75E1 /* RoadsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoadsLayer.h; sourceTree = "<group>"; };
 		B8947714170D66E100DD75E1 /* RoadsLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RoadsLayer.mm; sourceTree = "<group>"; };
+		B89C852917245EE500F98B3F /* tower0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tower0.png; sourceTree = "<group>"; };
 		B89EC33A170C2889006F23E0 /* Tower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tower.h; sourceTree = "<group>"; };
 		B89EC33B170C2889006F23E0 /* Tower.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tower.mm; sourceTree = "<group>"; };
 		B89EC33E170C4FCF006F23E0 /* map0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map0.png; sourceTree = "<group>"; };
@@ -216,7 +228,7 @@
 		B89EC377170C5C81006F23E0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B89EC3A2170C8250006F23E0 /* tile.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tile.tmx; sourceTree = "<group>"; };
 		B8A27B3116FA18BD00E3848A /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
-		B8A27B3216FA18BD00E3848A /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
+		B8A27B3216FA18BD00E3848A /* Settings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Settings.mm; sourceTree = "<group>"; };
 		B8A27B3416FA19E600E3848A /* GameConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameConfig.h; sourceTree = "<group>"; };
 		B8A27B3516FA19E600E3848A /* GameConfig.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameConfig.mm; sourceTree = "<group>"; };
 		B8B1438F16E7722200384377 /* sacraria_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sacraria_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -487,6 +499,7 @@
 		B8B1452A16E7722500384377 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B8B1452C16E7722500384377 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B8B1452D16E7722500384377 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
+		B8FEEDFF173D457C00E54FAF /* stoneObjects.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = stoneObjects.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -530,6 +543,11 @@
 		B8162FA01712C3CC0032F6D5 /* tmp */ = {
 			isa = PBXGroup;
 			children = (
+				B8565FBA173D1104009731FA /* sd.tmx */,
+				B8565FB5173D10FF009731FA /* stoneObjects.png */,
+				B8FEEDFF173D457C00E54FAF /* stoneObjects.plist */,
+				B8565FB6173D10FF009731FA /* stoneTiles.png */,
+				B89C852917245EE500F98B3F /* tower0.png */,
 				B8162FA21712C3E10032F6D5 /* unit0.png */,
 				B8162FA31712C3E10032F6D5 /* unit1.png */,
 				B8162FA41712C3E10032F6D5 /* unit2.png */,
@@ -547,7 +565,7 @@
 				B8A27B3416FA19E600E3848A /* GameConfig.h */,
 				B8A27B3516FA19E600E3848A /* GameConfig.mm */,
 				B8A27B3116FA18BD00E3848A /* Settings.h */,
-				B8A27B3216FA18BD00E3848A /* Settings.m */,
+				B8A27B3216FA18BD00E3848A /* Settings.mm */,
 				B849EA9916FB4C0900E8BBF9 /* AppHosts.plist */,
 			);
 			name = "Settings & Config";
@@ -598,6 +616,8 @@
 				B8D8AA9A16E78D0A007F6E38 /* App */,
 				B805ED5D16E77550002E03FC /* GameLayer.h */,
 				B805ED5E16E77550002E03FC /* GameLayer.mm */,
+				B88E06CB1738F47D006701D2 /* ConnectionLayer.h */,
+				B88E06CC1738F47D006701D2 /* ConnectionLayer.mm */,
 				B89EC33A170C2889006F23E0 /* Tower.h */,
 				B89EC33B170C2889006F23E0 /* Tower.mm */,
 				B8162FAC171326610032F6D5 /* Troop.h */,
@@ -1095,6 +1115,11 @@
 				B8162FA91712C3E10032F6D5 /* unit2.png in Resources */,
 				B8162FAA1712C3E10032F6D5 /* unit3.png in Resources */,
 				B8162FAB1712C3E10032F6D5 /* unit4.png in Resources */,
+				B89C852A17245EE500F98B3F /* tower0.png in Resources */,
+				B8565FB7173D10FF009731FA /* stoneObjects.png in Resources */,
+				B8565FB8173D10FF009731FA /* stoneTiles.png in Resources */,
+				B8565FBB173D1104009731FA /* sd.tmx in Resources */,
+				B8FEEE00173D457C00E54FAF /* stoneObjects.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1211,7 +1236,7 @@
 				B8B1452B16E7722500384377 /* main.m in Sources */,
 				B8B1452E16E7722500384377 /* AppDelegate.mm in Sources */,
 				B805ED5F16E77550002E03FC /* GameLayer.mm in Sources */,
-				B8A27B3316FA18BD00E3848A /* Settings.m in Sources */,
+				B8A27B3316FA18BD00E3848A /* Settings.mm in Sources */,
 				B8A27B3616FA19E600E3848A /* GameConfig.mm in Sources */,
 				B89EC33C170C2889006F23E0 /* Tower.mm in Sources */,
 				B89EC347170C5A13006F23E0 /* base64.c in Sources */,
@@ -1228,6 +1253,7 @@
 				B89EC365170C5B78006F23E0 /* UIImageView+AFNetworking.m in Sources */,
 				B8947715170D66E100DD75E1 /* RoadsLayer.mm in Sources */,
 				B8162FAE171326610032F6D5 /* Troop.mm in Sources */,
+				B88E06CD1738F47D006701D2 /* ConnectionLayer.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1288,6 +1314,7 @@
 				HEADER_SEARCH_PATHS = "\"sacraria_ios/libs/kazmath/include\"";
 				INFOPLIST_FILE = sacraria_ios/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-ObjC",
@@ -1310,6 +1337,7 @@
 				HEADER_SEARCH_PATHS = "\"sacraria_ios/libs/kazmath/include\"";
 				INFOPLIST_FILE = sacraria_ios/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-ObjC",

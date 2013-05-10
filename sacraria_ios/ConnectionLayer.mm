@@ -7,9 +7,58 @@
 //
 
 #import "ConnectionLayer.h"
-#import "APIClient.h"
 #import "GameLayer.h"
 #import "GameConfig.h"
+#import "AFJSONRequestOperation.h"
+#import "Settings.h"
+
+@implementation UpdateManager
+
++ (void) checkStatus {
+    NSString *urlStr = [NSString stringWithFormat: @"%@/login/?client_version=%i&asset_package_id=%i",
+                        [GameConfig sharedConfig].host, kVersion, [Settings sharedSettings].assetPackageId];
+
+    NSURL *url = [NSURL URLWithString: urlStr];
+    NSURLRequest *request = [NSURLRequest requestWithURL: url];
+    
+    id successBlock = ^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        int status = response.statusCode;
+        
+        switch(status) {
+            case kUpdateRequired:
+                //update
+                CCLOG(@"Update required");
+                
+                break;
+            case kNewAssetsRequired:
+                CCLOG(@"Downloading files...");
+                [self updateAssets];
+                break;
+            case kNormalServerStatus:
+                CCLOG(@"Normal status");
+                break;
+            default:
+                break;
+        }
+    };
+    
+    id failureBlock = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        //show alert and try to reconnect to a next host
+        [[GameConfig sharedConfig] pickUpAHost];
+        CCLOG(@"ERROR!");
+    };
+    
+    AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest: request
+                                                                                 success: successBlock
+                                                                                 failure: failureBlock];
+    [op start];
+}
+
++ (void) updateAssets {
+    
+}
+
+@end
 
 @interface ConnectionLayer (APINotifications)
 
@@ -99,7 +148,7 @@
                                                    object: nil];
         
         //
-        [[APIClient sharedClient] login];
+        //[[APIClient sharedClient] login];
         
     }
     
@@ -128,31 +177,31 @@
 - (void) onFailedToLogIn {
     statusLabel.string = @"Failed to log in";
     
-    [[APIClient sharedClient] reconnect];
+    //[[APIClient sharedClient] reconnect];
 }
 
 - (void) onSignedUp {
     statusLabel.string = @"Signed up";
     
     //we've just signed up, so let's login
-    [self runAction:
-                    [CCSequence actions:
-                                        [CCDelayTime actionWithDuration: 0.5],
-                                        [CCCallBlock actionWithBlock:^{
-                                            [[APIClient sharedClient] login];
-                                        }],
-                                        nil]];
+//    [self runAction:
+//                    [CCSequence actions:
+//                                        [CCDelayTime actionWithDuration: 0.5],
+//                                        [CCCallBlock actionWithBlock:^{
+//                                            [[APIClient sharedClient] login];
+//                                        }],
+//                                        nil]];
 }
 
 - (void) onFailedToSignUp {
     statusLabel.string = @"Failed to sign up";
     
-    [[APIClient sharedClient] reconnect];
+    //[[APIClient sharedClient] reconnect];
 }
 
 - (void) onPingLost {
     //the ping is lost, so let's reconnect
-    [[APIClient sharedClient] reconnect];
+    //[[APIClient sharedClient] reconnect];
 }
 
 //- (void) onFailedToConnect {
@@ -160,7 +209,7 @@
 //}
 
 - (void) onNetworkConnectionRestored {
-    [[APIClient sharedClient] reconnect];
+    //[[APIClient sharedClient] reconnect];
 }
 
 @end
